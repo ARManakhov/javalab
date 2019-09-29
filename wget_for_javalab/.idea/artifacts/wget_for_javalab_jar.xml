@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="wget_for_javalab:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/wget_for_javalab_jar</output-path>
+    <root id="archive" name="wget_for_javalab.jar">
+      <element id="module-output" name="wget_for_javalab" />
+    </root>
+  </artifact>
+</component>
