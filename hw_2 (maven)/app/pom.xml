@@ -1,0 +1,32 @@
+<project>
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>ru.sirosh</groupId>
+	<artifactId>app</artifactId>
+	<version>0.0.1</version>
+    
+    <dependencies>
+		<dependency>
+			<groupId>ru.sirosh.app</groupId>
+			<artifactId>wget</artifactId>
+			<version>0.0.1</version>
+		</dependency>
+	</dependencies>
+    <build>
+      <plugins>
+        <plugin>
+          <artifactId>maven-assembly-plugin</artifactId>
+          <configuration>
+            <archive>
+              <manifest>
+                <mainClass>ru.sirosh.Main</mainClass>
+              </manifest>
+            </archive>
+                <descriptorRefs>
+                    <descriptorRef>jar-with-dependencies</descriptorRef>
+                </descriptorRefs>
+              </configuration>
+            </plugin>
+        </plugins>
+    </build>
+    
+</project>
