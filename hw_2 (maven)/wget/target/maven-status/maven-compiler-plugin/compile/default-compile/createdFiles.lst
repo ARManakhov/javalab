@@ -1,0 +1,8 @@
+ru/sirosh/ArgsParser.class
+ru/sirosh/MultiplePathException.class
+ru/sirosh/Config.class
+ru/sirosh/Downloader.class
+ru/sirosh/ParameterException.class
+ru/sirosh/AntiDouble.class
+ru/sirosh/SingleDownloader.class
+ru/sirosh/MultipleDownloader.class

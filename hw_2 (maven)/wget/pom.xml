@@ -1,6 +1,12 @@
 <project>
+	<properties>
+		<maven.compiler.target>1.8</maven.compiler.target>
+		<maven.compiler.source>1.8</maven.compiler.source>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	</properties>
+
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>ru.sirosh.wget</groupId>
+	<groupId>ru.sirosh</groupId>
 	<artifactId>wget</artifactId>
 	<version>0.0.1</version>
 </project>

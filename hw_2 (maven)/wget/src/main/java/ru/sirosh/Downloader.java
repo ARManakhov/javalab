@@ -1,4 +1,4 @@
-package com.company;
+package  ru.sirosh;
 
 import java.io.*;
 import java.net.MalformedURLException;
