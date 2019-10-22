@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/hw_3 (tomcat).iml" filepath="$PROJECT_DIR$/hw_3 (tomcat).iml" />
+      <module fileurl="file://$PROJECT_DIR$/webwget.iml" filepath="$PROJECT_DIR$/webwget.iml" />
     </modules>
   </component>
 </project>
