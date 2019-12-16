@@ -2,6 +2,7 @@ package ru.sirosh.Models;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.*;
 
@@ -11,9 +12,19 @@ public class User {
     private User() {
 
     }
+
     private String username;
     private String password;
     private Long id;
+    private String role;
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
 
     public String getUsername() {
         return username;
@@ -40,13 +51,29 @@ public class User {
     }
 
 
-    public User(String username, String password,Long id) {
+    public User(String username, String password, Long id, String role) {
         this.username = username;
         this.password = password;
         this.id = id;
+        this.role = role;
     }
+
     public User(String username, String password) {
         this.username = username;
         this.password = password;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return username.equals(user.username) &&
+                id.equals(user.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(username, id);
     }
 }

@@ -2,6 +2,7 @@ package ru.sirosh;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import ru.sirosh.Models.Message;
+import ru.sirosh.Models.User;
 import ru.sirosh.Models.request.DummyRequest;
 import ru.sirosh.Models.request.ReqWitmMsgs;
 import ru.sirosh.Models.request.ReqWithString;
@@ -27,18 +28,13 @@ public class ConsoleOutHandler extends Thread {
     public void run() {
         ObjectMapper mapper = new ObjectMapper();
         while (true){
-            if ((currentState.getState() == ru.sirosh.State.AUTH || currentState.getState() == ru.sirosh.State.LOG)){
+            if ((currentState.getState() == ru.sirosh.State.CHAT)){
                 String socketLine;
                 try {
                     if ((socketLine = reader.readLine()) != null){
                         DummyRequest req = mapper.readValue(socketLine, DummyRequest.class);
-                        if( req.header.equals("newMsg")){
+                        if(req.header.equals("newMsg")){
                             System.out.println(mapper.readValue(socketLine, ReqWithString.class).payload);
-                        }else if(req.header.equals("msgs")){
-                            List<Message> msgs = mapper.readValue(socketLine, ReqWitmMsgs.class).payload;
-                            for (Message msg: msgs ) {
-                                System.out.println("user with id " + msg.senderId + ":" + msg.text);
-                            }
                         }
                     }
                 } catch (IOException ex) {

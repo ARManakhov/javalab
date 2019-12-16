@@ -19,13 +19,14 @@ public class UsersRepositoryJdbcImpl implements UsersRepository {
             new User(
                     rs.getString("username"),
                     rs.getString("password"),
-                    rs.getLong("id")
-                    );
+                    rs.getLong("id"),
+                    rs.getString("user_role")
+
+            );
 
     @Override
     public Optional<User> findOneByUsername(String username) {
-        String sqlQuery = "SELECT * FROM \"user\" " +
-                "WHERE username = ?";
+        String sqlQuery = "SELECT * FROM \"user\" WHERE username = ?";
         try (PreparedStatement stmt = connection.prepareStatement(sqlQuery)) {
             stmt.setString(1, username);
             try (ResultSet rs = stmt.executeQuery()) {
@@ -42,15 +43,37 @@ public class UsersRepositoryJdbcImpl implements UsersRepository {
     }
 
     @Override
+    public Optional<User> findOneById(Long id) {
+        String sqlQuery = "SELECT * FROM \"user\" WHERE id = ?";
+        try (PreparedStatement stmt = connection.prepareStatement(sqlQuery)) {
+            stmt.setLong(1, id);
+            try (ResultSet rs = stmt.executeQuery()) {
+                User u = null;
+                if (rs.next()) {
+                    u = userRowMapper.mapRow(rs);
+                }
+                return Optional.ofNullable(u);
+            }
+        } catch (SQLException e) {
+            throw new IllegalStateException(e);
+        }
+
+    }
+
+
+    @Override
     public void save(User user) {
-        String sqlQuery = "insert into \"user\" (username, password) values ( ?, ?) returning id;";
+        String sqlQuery = "insert into \"user\" (username, password, user_role) values (?, ?, 'user') returning id;";
         try (PreparedStatement stmt = connection.prepareStatement(sqlQuery)) {
             stmt.setString(1, user.getUsername());
             stmt.setString(2, user.getPassword());
+
             ResultSet rs = stmt.executeQuery();
-            if (rs.next()){
+            if (rs.next()) {
                 user.setId(rs.getLong("id"));
+                user.setRole("user");
             }
+
         } catch (SQLException e) {
             throw new IllegalStateException(e);
         }

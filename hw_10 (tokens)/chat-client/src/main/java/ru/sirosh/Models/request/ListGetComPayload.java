@@ -1,12 +1,12 @@
 package ru.sirosh.Models.request;
 
-public class ReqWithMsgGetComPayload {
+public class ListGetComPayload {
     public long offset;
     public long number;
 
-    private ReqWithMsgGetComPayload(){}
+    private ListGetComPayload(){}
 
-    public ReqWithMsgGetComPayload(long offset, long number) {
+    public ListGetComPayload(long offset, long number) {
         this.offset = offset;
         this.number = number;
     }

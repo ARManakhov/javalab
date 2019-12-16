@@ -50,10 +50,10 @@ public class MessageRepositoryJdbcImpl implements MessageRepository {
     @Override
     public List<Message> findLastMessageWithOffset(long num, long offset) {
 
-        String sqlQuery = "select * from (select * from \"message\" ORDER BY id DESC LIMIT ? ) AS newMsg ORDER BY id ASC LIMIT ?";
+        String sqlQuery = "select * from \"message\" order by id DESC limit ? offset ?;";
         try (PreparedStatement stmt = connection.prepareStatement(sqlQuery)) {
-            stmt.setLong(1, offset+num);
-            stmt.setLong(2, num);
+            stmt.setLong(1, num);
+            stmt.setLong(2, offset);
 
             try (ResultSet rs = stmt.executeQuery()) {
                 List<Message> m = new ArrayList<>();
@@ -68,7 +68,7 @@ public class MessageRepositoryJdbcImpl implements MessageRepository {
 
     }
 
-        @Override
+    @Override
     public void save(Message message) {
         String sqlQuery = "insert into \"message\" (senderId,text,time) values (?, ?,?) returning id";
         try (PreparedStatement stmt = connection.prepareStatement(sqlQuery)) {
@@ -103,5 +103,20 @@ public class MessageRepositoryJdbcImpl implements MessageRepository {
     @Override
     public List<Message> findAll() {
         return null;
+    }
+
+    public long getCount() {
+        String sqlQuery = "select count(*) from \"message\"";
+        try (PreparedStatement stmt = connection.prepareStatement(sqlQuery)) {
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                   return rs.getLong(1);
+                }
+            }
+        } catch (SQLException e) {
+            throw new IllegalStateException(e);
+        }
+        return 0;
     }
 }

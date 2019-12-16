@@ -28,7 +28,6 @@ public class ChatConnection {
             }
         }
         System.out.println();
-        System.out.println("for login type \"1\" for register type \"2\"");
         startMessageTasks();
     }
 
