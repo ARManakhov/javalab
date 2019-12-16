@@ -1,24 +1,39 @@
 package ru.sirosh;
 
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.JWTCreator;
+import com.auth0.jwt.JWTVerifier;
+import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.exceptions.JWTCreationException;
+import com.auth0.jwt.exceptions.JWTVerificationException;
+import com.auth0.jwt.interfaces.Claim;
+import com.auth0.jwt.interfaces.DecodedJWT;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.sun.org.apache.xml.internal.security.algorithms.SignatureAlgorithm;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import ru.sirosh.Models.*;
 import ru.sirosh.Models.request.*;
 import ru.sirosh.Repositories.*;
 
+import javax.crypto.spec.SecretKeySpec;
+import javax.jws.soap.SOAPBinding;
+import javax.xml.bind.DatatypeConverter;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.security.Key;
+import java.security.interfaces.RSAPublicKey;
 import java.sql.Connection;
 import java.sql.Timestamp;
 import java.util.*;
 import java.util.stream.Collectors;
 
 public class ClientSocket extends Thread {
+    private final String SECRET_KEY = "secret";
     private Socket socket;
     private BufferedReader reader;
     private List<ClientSocket> clients;
@@ -108,9 +123,14 @@ public class ClientSocket extends Thread {
         if (user != null && request.header.equals("delAddress")) {
             delAddress(line);
         }
+        if (user != null && request.header.equals("role")) {
+            roleReqHandler(line);
+        }
     }
 
     private void getAddresses(String line) throws IOException {
+        ReqWithString req = mapper.readValue(line, ReqWithString.class);
+        User user = decodeJwt(req.payload);
         AddressRepositoryJdbcImpl arji = new AddressRepositoryJdbcImpl(connection);
         String resp = mapper.writeValueAsString(new ReqWithAddresses("getAddresses", arji.findByUserId(user.getId())));
         writer.println(resp);
@@ -118,44 +138,61 @@ public class ClientSocket extends Thread {
     }
 
     private void newAddress(String line) throws IOException {
-        ReqWithAddress reqFull = mapper.readValue(line,ReqWithAddress.class);
+        ReqWithAddressToken reqFull = mapper.readValue(line, ReqWithAddressToken.class);
+        User user = decodeJwt(reqFull.token);
         AddressRepositoryJdbcImpl arji = new AddressRepositoryJdbcImpl(connection);
         Address address = reqFull.address;
         address.userId = user.getId();
         arji.save(address);
-        String resp = mapper.writeValueAsString(new ReqWithString("newAddress","success"));
+        String resp = mapper.writeValueAsString(new ReqWithString("newAddress", "success"));
         writer.println(resp);
         System.out.println("returning : " + resp);
     }
 
     private void delAddress(String line) throws IOException {
-        ReqWithAddress reqFull = mapper.readValue(line,ReqWithAddress.class);
+        ReqWithAddressToken reqFull = mapper.readValue(line, ReqWithAddressToken.class);
+        User user = decodeJwt(reqFull.token);
         AddressRepositoryJdbcImpl arji = new AddressRepositoryJdbcImpl(connection);
         Address address = reqFull.address;
         address.userId = user.getId();
         arji.delete(reqFull.address);
-        String resp = mapper.writeValueAsString(new ReqWithString("delAddress","success"));
+        String resp = mapper.writeValueAsString(new ReqWithString("delAddress", "success"));
         writer.println(resp);
         System.out.println("returning : " + resp);
     }
 
 
     private void deleteProductReqHandler(String line) throws IOException {
-        ReqWithProduct reqFull = mapper.readValue(line, ReqWithProduct.class);
-        ProductRepositoryJdbcImpl prji = new ProductRepositoryJdbcImpl(connection);
-        reqFull.product.isDeleted = true;
-        prji.delete(reqFull.product);
-        String resp = mapper.writeValueAsString(new ReqWithString("deleteProduct", "success"));
+        ReqWithProductToken reqFull = mapper.readValue(line, ReqWithProductToken.class);
+        User user = decodeJwt(reqFull.token);
+        UsersRepositoryJdbcImpl urji = new UsersRepositoryJdbcImpl(connection);
+        User userFromDb = urji.findOneById(user.getId()).get();
+        String resp;
+        if (userFromDb.getRole().equals("admin")) {
+            ProductRepositoryJdbcImpl prji = new ProductRepositoryJdbcImpl(connection);
+            reqFull.product.isDeleted = true;
+            prji.delete(reqFull.product);
+            resp = mapper.writeValueAsString(new ReqWithString("deleteProduct", "success"));
+        } else {
+            resp = mapper.writeValueAsString(new ReqWithString("deleteProduct", "fail"));
+        }
         writer.println(resp);
         System.out.println("returning : " + resp);
-
     }
 
     private void makeProductReqHandler(String line) throws IOException {
-        ReqWithProduct reqFull = mapper.readValue(line, ReqWithProduct.class);
-        ProductRepositoryJdbcImpl prji = new ProductRepositoryJdbcImpl(connection);
-        prji.save(reqFull.product);
-        String resp = mapper.writeValueAsString(new ReqWithString("makeProduct", "success"));
+        ReqWithProductToken reqFull = mapper.readValue(line, ReqWithProductToken.class);
+        User user = decodeJwt(reqFull.token);
+        UsersRepositoryJdbcImpl urji = new UsersRepositoryJdbcImpl(connection);
+        User userFromDb = urji.findOneById(user.getId()).get();
+        String resp;
+        if (userFromDb.getRole().equals("admin")) {
+            ProductRepositoryJdbcImpl prji = new ProductRepositoryJdbcImpl(connection);
+            prji.save(reqFull.product);
+            resp = mapper.writeValueAsString(new ReqWithString("makeProduct", "success"));
+        } else {
+            resp = mapper.writeValueAsString(new ReqWithString("makeProduct", "fail"));
+        }
         writer.println(resp);
         System.out.println("returning : " + resp);
 
@@ -163,9 +200,15 @@ public class ClientSocket extends Thread {
 
     private void getOrderReqHandler(String line) throws IOException {
         OrderRepositoryJdbcImpl orji = new OrderRepositoryJdbcImpl(connection);
-        ReqWithOrder reqFull = mapper.readValue(line, ReqWithOrder.class);
+        ReqWithOrderToken reqFull = mapper.readValue(line, ReqWithOrderToken.class);
         Order order = orji.getOrderById(reqFull.order.id);
-        String resp = mapper.writeValueAsString(new ReqWithOrder("getOrder", order));
+        User user = decodeJwt(reqFull.token);
+        String resp = null;
+        if (user.getId().equals(order.userId)) {
+            resp = mapper.writeValueAsString(new ReqWithOrder("getOrder", order));
+        } else {
+            resp = mapper.writeValueAsString(new ReqWithString("getOrder", "fail"));
+        }
         writer.println(resp);
         System.out.println("returning : " + resp);
 
@@ -173,6 +216,8 @@ public class ClientSocket extends Thread {
 
 
     private void getOrdersReqHandler(String line) throws IOException {
+        ReqWithString req = mapper.readValue(line, ReqWithString.class);
+        User user = decodeJwt(req.payload);
         OrderRepositoryJdbcImpl orji = new OrderRepositoryJdbcImpl(connection);
         List<Order> orders = orji.getOrderByUserId(user.getId());
         String resp = mapper.writeValueAsString(new ReqWithOrders("getOrders", orders));
@@ -182,7 +227,8 @@ public class ClientSocket extends Thread {
     }
 
     private void makeOrderReqHandler(String line) throws IOException {
-        ReqWithAddress reqFull = mapper.readValue(line, ReqWithAddress.class);
+        ReqWithAddressToken reqFull = mapper.readValue(line, ReqWithAddressToken.class);
+        User user = decodeJwt(reqFull.token);
         CartRepositoryJdbcImpl crji = new CartRepositoryJdbcImpl(connection);
         OrderRepositoryJdbcImpl orji = new OrderRepositoryJdbcImpl(connection);
         AddressRepositoryJdbcImpl arji = new AddressRepositoryJdbcImpl(connection);
@@ -197,7 +243,8 @@ public class ClientSocket extends Thread {
     }
 
     private void delFromCartReqHandler(String line) throws IOException {
-        ReqWithProduct reqFull = mapper.readValue(line, ReqWithProduct.class);
+        ReqWithProductToken reqFull = mapper.readValue(line, ReqWithProductToken.class);
+        User user = decodeJwt(reqFull.token);
         CartRepositoryJdbcImpl crji = new CartRepositoryJdbcImpl(connection);
         crji.delProduct(crji.getCartByUserId(user.getId()), reqFull.product);
         String resp = mapper.writeValueAsString(new ReqWithString("delFromCart", "success"));
@@ -206,16 +253,26 @@ public class ClientSocket extends Thread {
     }
 
     private void cartViewReqHandler(String line) throws IOException {
-        ReqWithListGetCom reqFull = mapper.readValue(line, ReqWithListGetCom.class);
+        ReqWithString reqFull = mapper.readValue(line, ReqWithString.class);
+        User user = decodeJwt(reqFull.payload);
+        UsersRepositoryJdbcImpl urji = new UsersRepositoryJdbcImpl(connection);
+        User userFromDb = urji.findOneById(user.getId()).get();
         CartRepositoryJdbcImpl crji = new CartRepositoryJdbcImpl(connection);
-        List<Product> list = crji.getCartByUserId(user.getId()).productList;
-        String resp = mapper.writeValueAsString(new ReqWithProducts("cartView", list, (long) list.size()));
+        Cart cart = crji.getCartByUserId(user.getId());
+        List<Product> list = cart.productList;
+        String resp;
+        if (user.getId().equals(cart.userId)) {
+            resp = mapper.writeValueAsString(new ReqWithProducts("cartView", list, (long) list.size()));
+        } else {
+            resp = mapper.writeValueAsString(new ReqWithString("getOrder", "fail"));
+        }
         writer.println(resp);
         System.out.println("returning : " + resp);
     }
 
     private void addToCartReqHandler(String line) throws IOException {
-        ReqWithProduct reqFull = mapper.readValue(line, ReqWithProduct.class);
+        ReqWithProductToken reqFull = mapper.readValue(line, ReqWithProductToken.class);
+        User user = decodeJwt(reqFull.token);
         CartRepositoryJdbcImpl crji = new CartRepositoryJdbcImpl(connection);
         crji.addProduct(crji.getCartByUserId(user.getId()), reqFull.product);
         String resp = mapper.writeValueAsString(new ReqWithString("addToCart", "success"));
@@ -251,7 +308,8 @@ public class ClientSocket extends Thread {
 
     private void sendReqHandler(String line) throws IOException {
         Timestamp currentTime = new Timestamp(System.currentTimeMillis());
-        ReqWithString fullReq = mapper.readValue(line, ReqWithString.class);
+        ReqWithStringToken fullReq = mapper.readValue(line, ReqWithStringToken.class);
+        User user = decodeJwt(fullReq.token);
         System.out.println("sending:" + fullReq.payload);
         new MessageRepositoryJdbcImpl(connection).save(new Message(user.getId(), (String) fullReq.payload, currentTime));
         for (ClientSocket client : clients) {
@@ -295,17 +353,56 @@ public class ClientSocket extends Thread {
             if (encoder.matches(userFromJson.getPassword(), userFromDb.getPassword())) {
                 user = userFromDb;
                 user.setPassword(null);
-                resp = mapper.writeValueAsString(new ReqWithUser("login", user));
+                resp = mapper.writeValueAsString(new ReqWithString("login", createJWT(user)));
             } else {
-                resp = mapper.writeValueAsString(new ReqWithUser("login", null));
+                resp = mapper.writeValueAsString(new ReqWithString("login", null));
             }
         } catch (NoSuchElementException e) {
-            resp = mapper.writeValueAsString(new ReqWithUser("login", null));
+            resp = mapper.writeValueAsString(new ReqWithString("login", null));
         }
         writer.println(resp);
         System.out.println("returning : " + resp);
     }
 
+    private void roleReqHandler(String line) throws IOException {
+        ReqWithString fullReq = mapper.readValue(line, ReqWithString.class);
+        User user = decodeJwt(fullReq.payload);
+        UsersRepositoryJdbcImpl urji = new UsersRepositoryJdbcImpl(connection);
+        User userFromDb = urji.findOneById(user.getId()).get();
+        String resp = mapper.writeValueAsString(new ReqWithString("role", userFromDb.getRole()));
+        writer.println(resp);
+        System.out.println("returning : " + resp);
+    }
+
+    public String createJWT(User user) {
+
+        try {
+            Algorithm algorithm = Algorithm.HMAC256(SECRET_KEY);
+            String token = JWT.create()
+                    .withClaim("id", user.getId())
+                    .withClaim("username", user.getUsername())
+                    .withClaim("role", user.getRole())
+                    .sign(algorithm);
+
+            return token;
+        } catch (JWTCreationException exception) {
+            return null;
+        }
+    }
+
+    public User decodeJwt(String token) {
+        try {
+            Algorithm algorithm = Algorithm.HMAC256(SECRET_KEY);
+            JWTVerifier verifier = JWT.require(algorithm)
+                    .build();
+            DecodedJWT jwt = verifier.verify(token);
+            Map<String, Claim> claims = jwt.getClaims();
+            User user = new User(claims.get("username").asString(), claims.get("id").asLong(), claims.get("role").asString());
+            return user;
+        } catch (JWTVerificationException exception) {
+            return null;
+        }
+    }
 
 }
 

@@ -19,7 +19,7 @@ public class ConsoleInHandler extends Thread {
     private BufferedReader reader;
     private ConsoleOutHandler t2;
     private boolean firstTime = true;
-    private User user;
+    String userToken = null;
 
     public ConsoleInHandler(PrintWriter writer, BufferedReader reader, ru.sirosh.StateHolder currentState) {
         this.writer = writer;
@@ -71,7 +71,7 @@ public class ConsoleInHandler extends Thread {
     }
 
     private void orderListScreen(Scanner sc) throws IOException {
-        if (firstTime){
+        if (firstTime) {
             firstTime = false;
             System.out.println("to return to menu type /m");
             System.out.println("to view order details type number ");
@@ -97,8 +97,8 @@ public class ConsoleInHandler extends Thread {
             System.out.println("order status : " + viewOrder.status);
             System.out.println("order address : " + viewOrder.address.description);
             System.out.println("order products : ");
-            int j=0;
-            for (Product product: viewOrder.productList) {
+            int j = 0;
+            for (Product product : viewOrder.productList) {
                 if (product != null) {
                     System.out.println(++j + ")" + product.name + " \t| " + product.cost + " \t| " + product.description);
                 }
@@ -115,7 +115,7 @@ public class ConsoleInHandler extends Thread {
             System.out.println("to delete address  type /r");
             offset = 0;
         }
-        ReqWithListGetCom req = new ReqWithListGetCom("getAddresses", new ListGetComPayload(offset, 5));
+        ReqWithString req = new ReqWithString("getAddresses", userToken);
         writer.println(mapper.writeValueAsString(req));
         ReqWithAddresses resp = mapper.readValue(reader.readLine(), ReqWithAddresses.class);
         List<Address> addresses = resp.address;
@@ -129,7 +129,7 @@ public class ConsoleInHandler extends Thread {
             Address delAddress = addresses.get(--addNum);
 
             if (delAddress != null) {
-                ReqWithAddress delReq = new ReqWithAddress("delAddress", delAddress);
+                ReqWithAddressToken delReq = new ReqWithAddressToken("delAddress", delAddress, userToken);
                 writer.println(mapper.writeValueAsString(delReq));
                 ReqWithString delResp = mapper.readValue(reader.readLine(), ReqWithString.class);
                 System.out.println(delResp.payload);
@@ -141,7 +141,7 @@ public class ConsoleInHandler extends Thread {
         } else if (line.equals("/n")) {
             System.out.println("enter address");
             line = sc.nextLine();
-            ReqWithAddress reqWithAddress = new ReqWithAddress("newAddress", new Address(line));
+            ReqWithAddressToken reqWithAddress = new ReqWithAddressToken("newAddress", new Address(line), userToken);
             writer.println(mapper.writeValueAsString(reqWithAddress));
             ReqWithString respSave = mapper.readValue(reader.readLine(), ReqWithString.class);
             System.out.println(respSave.payload);
@@ -157,7 +157,7 @@ public class ConsoleInHandler extends Thread {
             System.out.println("to delete product from cart type /r");
             offset = 0;
         }
-        ReqWithListGetCom req = new ReqWithListGetCom("cartView", new ListGetComPayload(offset, 5));
+        ReqWithString req = new ReqWithString("cartView", userToken);
         writer.println(mapper.writeValueAsString(req));
         ReqWithProducts resp = mapper.readValue(reader.readLine(), ReqWithProducts.class);
         int i = 0;
@@ -174,7 +174,7 @@ public class ConsoleInHandler extends Thread {
             Product delProduct = products.get(--productNum);
 
             if (delProduct != null) {
-                ReqWithProduct delReq = new ReqWithProduct("delFromCart", delProduct);
+                ReqWithProductToken delReq = new ReqWithProductToken("delFromCart", delProduct, userToken);
                 writer.println(mapper.writeValueAsString(delReq));
                 ReqWithString delResp = mapper.readValue(reader.readLine(), ReqWithString.class);
                 System.out.println(delResp.payload);
@@ -185,7 +185,7 @@ public class ConsoleInHandler extends Thread {
         } else if (line.equals("/o")) {
             System.out.println("chose address");
             firstTime = true;
-            ReqWithListGetCom reqAddresses = new ReqWithListGetCom("getAddresses", new ListGetComPayload(offset, 5));
+            ReqWithString reqAddresses = new ReqWithString("getAddresses", userToken);
             writer.println(mapper.writeValueAsString(reqAddresses));
             ReqWithAddresses respAddresses = mapper.readValue(reader.readLine(), ReqWithAddresses.class);
             List<Address> addresses = respAddresses.address;
@@ -195,7 +195,7 @@ public class ConsoleInHandler extends Thread {
             }
             String addNumLine = sc.nextLine();
             int addNum = Integer.parseInt(addNumLine);
-            ReqWithAddress reqWithAddress = new ReqWithAddress("makeOrder", addresses.get(--addNum));
+            ReqWithAddressToken reqWithAddress = new ReqWithAddressToken("makeOrder", addresses.get(--addNum), userToken);
             writer.println(mapper.writeValueAsString(reqWithAddress));
             ReqWithString delResp = mapper.readValue(reader.readLine(), ReqWithString.class);
             System.out.println(delResp.payload);
@@ -221,7 +221,7 @@ public class ConsoleInHandler extends Thread {
             }
         }
 
-        ReqWithProduct req = new ReqWithProduct("makeProduct", new Product(name, description, cost));
+        ReqWithProductToken req = new ReqWithProductToken("makeProduct", new Product(name, description, cost), userToken);
         writer.println(mapper.writeValueAsString(req));
         ReqWithString resp = mapper.readValue(reader.readLine(), ReqWithString.class);
         System.out.println(resp.payload);
@@ -241,19 +241,24 @@ public class ConsoleInHandler extends Thread {
             firstTime = true;
             currentState.setState(ru.sirosh.State.MENU);
         } else {
-            writer.println(mapper.writeValueAsString(new ReqWithString("send", line)));
+            writer.println(mapper.writeValueAsString(new ReqWithStringToken("send", line, userToken)));
 
         }
 
     }
 
+
     private void productsScreen(Scanner sc) throws IOException {
+        ReqWithString reqRole = new ReqWithString("role", userToken);
+        writer.println(mapper.writeValueAsString(reqRole));
+        ReqWithString respRole = mapper.readValue(reader.readLine(), ReqWithString.class);
+
         if (firstTime) {
             firstTime = false;
             System.out.println("to return to menu type /m");
             System.out.println("to see next page type >, prev page <");
             System.out.println("type product number to add to cart");
-            if (user.getRole().equals("admin")) {
+            if (respRole.payload.equals("admin")) {
                 System.out.println("to add post type /a");
                 System.out.println("to remove post type /r");
             }
@@ -270,15 +275,15 @@ public class ConsoleInHandler extends Thread {
             System.out.println(++i + ")" + product.name + " \t| " + product.cost + " \t| " + product.description);
         }
         String line = sc.nextLine();
-        if (line.equals("/a") && user.getRole().equals("admin")) {
+        if (line.equals("/a") && respRole.payload.equals("admin")) {
             firstTime = true;
             currentState.setState(ru.sirosh.State.PRODUCT_NEW);
-        } else if (line.startsWith("/r") && user.getRole().equals("admin")) {
+        } else if (line.startsWith("/r") && respRole.payload.equals("admin")) {
             int productNum = Integer.parseInt(line.split(" ")[1]);
             Product delProduct = products.get(--productNum);
 
             if (delProduct != null) {
-                ReqWithProduct delReq = new ReqWithProduct("deleteProduct", delProduct);
+                ReqWithProductToken delReq = new ReqWithProductToken("deleteProduct", delProduct,userToken);
                 writer.println(mapper.writeValueAsString(delReq));
                 ReqWithString delResp = mapper.readValue(reader.readLine(), ReqWithString.class);
                 System.out.println(delResp.payload);
@@ -296,7 +301,7 @@ public class ConsoleInHandler extends Thread {
         } else {
             int productNum = Integer.parseInt(line);
             Product cartProduct = products.get(--productNum);
-            ReqWithProduct reqCart = new ReqWithProduct("addToCart", cartProduct);
+            ReqWithProductToken reqCart = new ReqWithProductToken("addToCart", cartProduct, userToken);
             writer.println(mapper.writeValueAsString(reqCart));
             ReqWithString delResp = mapper.readValue(reader.readLine(), ReqWithString.class);
             System.out.println(delResp.payload);
@@ -377,9 +382,9 @@ public class ConsoleInHandler extends Thread {
         User user = new User(name, pass);
         ReqWithUser req = new ReqWithUser("register", user);
         writer.println(mapper.writeValueAsString(req));
-        ReqWithUser resp = mapper.readValue(reader.readLine(), ReqWithUser.class);
+        ReqWithString resp = mapper.readValue(reader.readLine(), ReqWithString.class);
         if (resp.payload != null) {
-            this.user = resp.payload;
+            userToken = resp.payload;
             currentState.setState(ru.sirosh.State.MENU);
         } else {
             System.out.println("try again");
@@ -394,9 +399,9 @@ public class ConsoleInHandler extends Thread {
         User user = new User(name, pass);
         ReqWithUser req = new ReqWithUser("login", user);
         writer.println(mapper.writeValueAsString(req));
-        ReqWithUser resp = mapper.readValue(reader.readLine(), ReqWithUser.class);
+        ReqWithString resp = mapper.readValue(reader.readLine(), ReqWithString.class);
         if (resp.payload != null) {
-            this.user = resp.payload;
+            userToken = resp.payload;
             currentState.setState(ru.sirosh.State.MENU);
         } else {
             System.out.println("try again");
