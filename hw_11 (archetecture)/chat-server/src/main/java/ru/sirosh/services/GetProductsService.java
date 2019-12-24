@@ -34,7 +34,7 @@ public class GetProductsService implements Component {
     public Dto execute(Request req) {
         ProductRepositoryJdbcImpl prji = new ProductRepositoryJdbcImpl(dbConnection);
         List<DtoProduct> products = new ArrayList<>();
-        List<Product> dbProducts = prji.getList(((DtoGetList) req.getData()).getOffset(), ((DtoGetList) req.getData()).getNum());
+        List<Product> dbProducts = prji.getList(((DtoGetList) req.getData()).getNum(), ((DtoGetList) req.getData()).getOffset());
         for (Product p : dbProducts) {
             products.add(DtoProductBuilder.aDtoProduct()
                     .withName(p.getName())

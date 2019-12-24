@@ -3,10 +3,10 @@ package ru.sirosh.dto;
 import java.util.List;
 
 public class DtoProductsState extends DtoProducts {
-    boolean success;
+    String status;
 
-    public DtoProductsState(List<DtoProduct> products, int totalCount, boolean success) {
+    public DtoProductsState(List<DtoProduct> products, long totalCount, String status) {
         super(products, totalCount);
-        this.success = success;
+        this.status = status;
     }
 }

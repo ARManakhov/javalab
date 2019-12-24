@@ -1,15 +1,13 @@
 package ru.sirosh.dispatcher;
 
-import ru.sirosh.services.GetProductsService;
-import ru.sirosh.services.LogInService;
-import ru.sirosh.services.RegSevice;
-import ru.sirosh.services.SendService;
+import ru.sirosh.services.*;
 
 public final class RequestsDispatcherBuilder {
     private LogInService logInService;
     private RegSevice regSevice;
     private SendService sendService;
     private GetProductsService getProductsService;
+    private AddProductService addProductService;
 
     private RequestsDispatcherBuilder() {
     }
@@ -38,7 +36,12 @@ public final class RequestsDispatcherBuilder {
         return this;
     }
 
+    public RequestsDispatcherBuilder withAddProductService(AddProductService addProductService) {
+        this.addProductService = addProductService;
+        return this;
+    }
+
     public RequestsDispatcher build() {
-        return new RequestsDispatcher(logInService, regSevice, sendService, getProductsService);
+        return new RequestsDispatcher(logInService, regSevice, sendService, getProductsService, addProductService);
     }
 }

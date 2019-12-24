@@ -3,10 +3,7 @@ package ru.sirosh.dispatcher;
 
 import ru.sirosh.dto.Dto;
 import ru.sirosh.protocol.Request;
-import ru.sirosh.services.GetProductsService;
-import ru.sirosh.services.LogInService;
-import ru.sirosh.services.RegSevice;
-import ru.sirosh.services.SendService;
+import ru.sirosh.services.*;
 
 public class RequestsDispatcher  {
 
@@ -14,14 +11,16 @@ public class RequestsDispatcher  {
     private RegSevice regSevice;
     private SendService sendService;
     private GetProductsService getProductsService;
-
-    public RequestsDispatcher(LogInService logInService, RegSevice regSevice, SendService sendService, GetProductsService getProductsService) {
+    private AddProductService addProductService;
+    private DeleteProductService deleteProductService;
+    private AddProductCartService addProductCartService;
+    public RequestsDispatcher(LogInService logInService, RegSevice regSevice, SendService sendService, GetProductsService getProductsService, AddProductService addProductService) {
         this.logInService = logInService;
         this.regSevice = regSevice;
         this.sendService = sendService;
         this.getProductsService = getProductsService;
+        this.addProductService = addProductService;
     }
-
 
     public Dto doDispatch(Request request) {
         if (request.getCommand().equals("logIn")) {
@@ -34,6 +33,12 @@ public class RequestsDispatcher  {
             return sendService.execute(request);
         }else if (request.getCommand().equals("getProducts")){
             return getProductsService.execute(request);
+        }else if (request.getCommand().equals("add_product")){
+            return addProductService.execute(request);
+        }else if (request.getCommand().equals("del_product")){
+            return deleteProductService.execute(request);
+        }else if (request.getCommand().equals("add_to_cart_product")){
+            return addProductCartService.execute(request);//todo реализацию
         }
         throw new IllegalArgumentException();
     }

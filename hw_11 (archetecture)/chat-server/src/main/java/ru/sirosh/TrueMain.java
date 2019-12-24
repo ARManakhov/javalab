@@ -13,10 +13,7 @@ import ru.sirosh.dispatcher.RequestsDispatcherBuilder;
 import ru.sirosh.network.SocketsManager;
 import ru.sirosh.protocol.Request;
 import ru.sirosh.protocol.RequestsHandler;
-import ru.sirosh.services.GetProductsService;
-import ru.sirosh.services.LogInService;
-import ru.sirosh.services.RegSevice;
-import ru.sirosh.services.SendService;
+import ru.sirosh.services.*;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -30,6 +27,7 @@ public class TrueMain {
         RegSevice regSevice = (RegSevice) context.getComponent(Component.class, "regService");
         SendService sendService = (SendService) context.getComponent(Component.class, "sender");
         GetProductsService getProductsService = (GetProductsService) context.getComponent(Component.class, "products");
+        AddProductService addProductService = (AddProductService) context.getComponent(Component.class,"add_product");
         try {
             ArgumentProperty argumentProperty = new ArgumentReader(args).getProperties();
             try {
@@ -39,11 +37,13 @@ public class TrueMain {
                 regSevice.setDbConnection(sqlConnection);
                 sendService.setDbConnection(sqlConnection);
                 getProductsService.setDbConnection(sqlConnection);
+                addProductService.setDbConnection(sqlConnection);
                 RequestsDispatcher dispatcher = RequestsDispatcherBuilder.aRequestsDispatcher()
                         .withLogInService(logInService)
                         .withRegSevice(regSevice)
                         .withSendService(sendService)
                         .withGetProductsService(getProductsService)
+                        .withAddProductService(addProductService)
                         .build();
                 RequestsHandler requestsHandler = new RequestsHandler(dispatcher);
 

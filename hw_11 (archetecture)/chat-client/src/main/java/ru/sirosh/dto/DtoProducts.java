@@ -2,7 +2,7 @@ package ru.sirosh.dto;
 
 import java.util.List;
 
-public class DtoProducts implements Dto{
+public class DtoProducts implements Dto {
     private List<DtoProduct> products;
     long totalCount;
 
@@ -22,7 +22,7 @@ public class DtoProducts implements Dto{
         this.totalCount = totalCount;
     }
 
-    private DtoProducts() {
+    protected DtoProducts() {
     }
 
     public DtoProducts(List<DtoProduct> products, long totalCount) {
