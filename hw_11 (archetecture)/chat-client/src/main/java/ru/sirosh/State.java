@@ -11,7 +11,7 @@ public enum State {
     PRODUCTS,
     PRODUCT_NEW,
     PRODUCTS_LIST,
-    ORDER,
+    ORDER_ADD,
     ORDERS_LIST,
     CART,
     LOGGED,

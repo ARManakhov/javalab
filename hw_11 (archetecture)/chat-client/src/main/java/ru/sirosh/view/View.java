@@ -1,5 +1,6 @@
 package ru.sirosh.view;
 
+import ru.sirosh.State;
 import ru.sirosh.State.*;
 import ru.sirosh.dto.Dto;
 import ru.sirosh.dto.DtoMessage;
@@ -21,6 +22,11 @@ public class View {
     MenuView menuView = new MenuView();
     ChatView chatView = new ChatView();
     ProductView productView = new ProductView();
+    CartView cartView = new CartView();
+    NewOrderView orderAddView = new NewOrderView();
+    AddressView addressView = new AddressView();
+    OrderView orderView = new OrderView();
+    MessagesView messagesView = new MessagesView();
 
     public View(StateHolder currentState) {
         beforeLoginSelectorView.setCurrentState(currentState);
@@ -32,8 +38,18 @@ public class View {
         chatView.setUser(user);
         productView.setCurrentState(currentState);
         productView.setUser(user);
+        orderAddView.setCurrentState(currentState);
+        orderAddView.setUser(user);
         menuView.setCurrentState(currentState);
         this.currentState = currentState;
+        cartView.setCurrentState(currentState);
+        cartView.setUser(user);
+        addressView.setCurrentState(currentState);
+        addressView.setUser(user);
+        orderView.setCurrentState(currentState);
+        orderView.setUser(user);
+        messagesView.setCurrentState(currentState);
+        messagesView.setUser(user);
     }
 
     public Request render(Response response) {
@@ -67,11 +83,28 @@ public class View {
                 else
                     break;
             }
+            if (currentState.getState().equals(ru.sirosh.State.CART)) {
+                request = cartView.execute(response);
+            }
+            if (currentState.getState().equals(ru.sirosh.State.ORDER_ADD)) {
+                request = orderAddView.execute(response);
+            }
+            if (currentState.getState().equals(ru.sirosh.State.ADDRESSES_LIST)) {
+                request = addressView.execute(response);
+            }
+            if (currentState.getState().equals(State.ORDERS_LIST)) {
+                request = orderView.execute(response);
+            }
+            if (currentState.getState().equals(State.CHAT_HISTORY)) {
+                request = messagesView.execute(response);
+            }
         }
 
         return request;
     }
+
     private static final SimpleDateFormat sdf = new SimpleDateFormat("HH.mm.ss");
+
     public void render(Request request) {
         if (currentState.getState().equals(ru.sirosh.State.CHAT) && request.getCommand().equals("new_message")) {
             DtoMessage dtoMessage = (DtoMessage) request.getData();

@@ -1,6 +1,6 @@
 package ru.sirosh.dto;
 
-public class DtoAddress {
+public class DtoAddress implements Dto  {
     DtoAddress(){}
     private long id;
     private String description;

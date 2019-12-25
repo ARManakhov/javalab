@@ -40,7 +40,7 @@ public class SendService implements Component {
         DtoMessage dtoMessage = (DtoMessage) req.getData();
         Timestamp currentTime = new Timestamp(System.currentTimeMillis());
         User user = new TokenizeUser().decodeJwt(dtoMessage.getToken());
-        new MessageRepositoryJdbcImpl(dbConnection).save(MessageBuilder.aMessage().withId(user.getId()).withText (dtoMessage.getText()).withTimestamp(currentTime).build());
+        new MessageRepositoryJdbcImpl(dbConnection).save(MessageBuilder.aMessage().withSenderId(user.getId()).withText (dtoMessage.getText()).withTimestamp(currentTime).build());
         dtoMessage.setUsername(user.getUsername());
         dtoMessage.setTimestamp(currentTime);
         socketsManager.sendEveryone(new Request<DtoMessage>("new_message", dtoMessage));

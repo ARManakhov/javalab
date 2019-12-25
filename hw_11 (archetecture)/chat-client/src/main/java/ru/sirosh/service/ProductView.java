@@ -107,7 +107,12 @@ public class ProductView implements ViewComponent {
                 } else {
                     int productNum = Integer.parseInt(line);
                     DtoProduct cartProduct = products.get(--productNum);
-                    return new Request("addToCart", cartProduct);
+                    return new Request("add_to_cart_product", DtoProductListBuilder.aDtoProductList()
+                            .withId(cartProduct.getId())
+                            .withNum(5)
+                            .withOffset(offset)
+                            .withToken(user.getToken())
+                            .build());
                 }
             }
         }

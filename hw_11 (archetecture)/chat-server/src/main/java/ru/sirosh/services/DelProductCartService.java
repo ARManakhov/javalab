@@ -3,6 +3,7 @@ package ru.sirosh.services;
 import ru.sirosh.TokenizeUser;
 import ru.sirosh.context.Component;
 import ru.sirosh.dto.*;
+import ru.sirosh.models.Cart;
 import ru.sirosh.models.Product;
 import ru.sirosh.models.ProductBuilder;
 import ru.sirosh.models.User;
@@ -16,7 +17,7 @@ import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AddProductCartService implements Component {
+public class DelProductCartService implements Component {
 
     SocketsManager socketsManager;
     Connection dbConnection;
@@ -32,7 +33,7 @@ public class AddProductCartService implements Component {
 
     @Override
     public String getComponentName() {
-        return "add_to_cart_product";
+        return "del_to_cart_product";
     }
 
     @Override
@@ -43,11 +44,10 @@ public class AddProductCartService implements Component {
         DtoProduct dtoProduct = (DtoProduct) req.getData();
         User reqUser = new TokenizeUser().decodeJwt(dtoProduct.getToken());
         User user = urji.findOneById(reqUser.getId()).get();
-        crji.addProduct(crji.getCartByUserId(user.getId()), ProductBuilder.aProduct().withId(dtoProduct.getId()).build());
+        crji.delProduct(crji.getCartByUserId(user.getId()), ProductBuilder.aProduct().withId(dtoProduct.getId()).build());
         List<DtoProduct> products = new ArrayList<>();
-        long num = ((DtoProductList) req.getData()).getNum();
-        long offset = ((DtoProductList) req.getData()).getOffset();
-        List<Product> dbProducts = prji.getList(num, offset);
+        Cart cart = crji.getCartByUserId(user.getId());
+        List<Product> dbProducts = cart.getProductList();
         for (Product p : dbProducts) {
             products.add(DtoProductBuilder.aDtoProduct()
                     .withName(p.getName())

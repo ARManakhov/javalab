@@ -28,6 +28,16 @@ public class TrueMain {
         SendService sendService = (SendService) context.getComponent(Component.class, "sender");
         GetProductsService getProductsService = (GetProductsService) context.getComponent(Component.class, "products");
         AddProductService addProductService = (AddProductService) context.getComponent(Component.class,"add_product");
+        AddProductCartService addProductCartService = (AddProductCartService) context.getComponent(Component.class, "add_to_cart_product");
+        DelProductCartService delCartProductService = (DelProductCartService) context.getComponent(Component.class, "del_to_cart_product");
+        GetCartService getCartService = (GetCartService ) context.getComponent(Component.class, "get_cart");
+        GetAddressesService getAddressesService = (GetAddressesService) context.getComponent(Component.class, "get_addresses");
+        DelAddressService delAddressService = (DelAddressService) context.getComponent(Component.class, "del_address");
+        AddAddressService addAddressService = (AddAddressService) context.getComponent(Component.class, "add_address");
+        NewOrderService newOrderService = (NewOrderService) context.getComponent(Component.class, "new_order");
+        GetOrdersService getOrdersService = (GetOrdersService) context.getComponent(Component.class, "get_order");
+        GetMessagesService getMessagesService = (GetMessagesService) context.getComponent(Component.class, "messages");
+        DeleteProductService deleteProductService = (DeleteProductService) context.getComponent(Component.class, "del_product");
         try {
             ArgumentProperty argumentProperty = new ArgumentReader(args).getProperties();
             try {
@@ -38,12 +48,32 @@ public class TrueMain {
                 sendService.setDbConnection(sqlConnection);
                 getProductsService.setDbConnection(sqlConnection);
                 addProductService.setDbConnection(sqlConnection);
+                addProductCartService.setDbConnection(sqlConnection);
+                getCartService.setDbConnection(sqlConnection);
+                delCartProductService.setDbConnection(sqlConnection);
+                getAddressesService.setDbConnection(sqlConnection);
+                delAddressService.setDbConnection(sqlConnection);
+                addAddressService.setDbConnection(sqlConnection);
+                newOrderService.setDbConnection(sqlConnection);
+                getOrdersService.setDbConnection(sqlConnection);
+                getMessagesService.setDbConnection(sqlConnection);
+                deleteProductService.setDbConnection(sqlConnection);
                 RequestsDispatcher dispatcher = RequestsDispatcherBuilder.aRequestsDispatcher()
                         .withLogInService(logInService)
                         .withRegSevice(regSevice)
                         .withSendService(sendService)
                         .withGetProductsService(getProductsService)
                         .withAddProductService(addProductService)
+                        .withAddProductCartService(addProductCartService)
+                        .withDelProductCartService(delCartProductService)
+                        .withGetCartService(getCartService)
+                        .withGetAddressesService(getAddressesService)
+                        .withDelAddressService(delAddressService)
+                        .withAddAddressService(addAddressService)
+                        .withNewOrderService(newOrderService)
+                        .withGetOrdersService(getOrdersService)
+                        .withGetMessagesService(getMessagesService)
+                        .withDeleteProductService(deleteProductService)
                         .build();
                 RequestsHandler requestsHandler = new RequestsHandler(dispatcher);
 
