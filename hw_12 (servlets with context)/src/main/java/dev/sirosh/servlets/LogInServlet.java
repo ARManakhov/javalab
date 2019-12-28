@@ -15,7 +15,6 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
 @WebServlet("/logIn")
-
 public class LogInServlet extends HttpServlet {
 
     private LogInService logInService;
@@ -45,5 +44,4 @@ public class LogInServlet extends HttpServlet {
             req.getRequestDispatcher("/auth").forward(req, resp);
         }
     }
-
 }

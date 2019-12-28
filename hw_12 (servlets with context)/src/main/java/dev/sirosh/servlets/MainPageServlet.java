@@ -48,11 +48,13 @@ public class MainPageServlet extends HttpServlet {
         }
         DtoProducts dtoProducts = ((DtoProducts) getProductsService.execute(new DtoGetList(page * 5, 5)));
         List<DtoProduct> productList = dtoProducts.getProducts();
-
+        long maxPage = dtoProducts.getTotalCount() / 5;
+        req.setAttribute("prevPage", page == 0? 0 : page-1);
+        req.setAttribute("nextPage", page <= maxPage-1 ? maxPage-1 : 1+page) ;
         req.setAttribute("username", username);
         req.setAttribute("products", productList);
-        req.setAttribute("curentPage", page);
-        req.setAttribute("maxPage", dtoProducts.getTotalCount() / 5);
+        req.setAttribute("curentPage", ++page);
+        req.setAttribute("maxPage", maxPage);
         req.getRequestDispatcher("/index.ftl").forward(req, resp);
     }
 }

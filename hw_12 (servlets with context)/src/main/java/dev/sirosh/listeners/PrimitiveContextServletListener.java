@@ -34,7 +34,7 @@ public class PrimitiveContextServletListener implements ServletContextListener {
             AddAddressService addAddressService = new AddAddressService(dbConnection);
             servletContext.setAttribute("addAddressService", addAddressService);
             AddProductCartService addProductCartService = new AddProductCartService(dbConnection);
-            servletContext.setAttribute("addAddressService", addAddressService);
+            servletContext.setAttribute("addProductCartService", addProductCartService);
             AddProductService addProductService = new AddProductService(dbConnection);
             servletContext.setAttribute("addProductService", addProductService);
             DelAddressService delAddressService = new DelAddressService(dbConnection);
