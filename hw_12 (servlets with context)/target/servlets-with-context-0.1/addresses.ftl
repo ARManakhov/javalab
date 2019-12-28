@@ -1,6 +1,6 @@
 <html>
-<head><title>ViralPatel.net - FreeMarker Hello World</title>
 
+<head><title>Shop</title></head>
 <body>
 <h1>Cart</h1>
 <table class="datatable">

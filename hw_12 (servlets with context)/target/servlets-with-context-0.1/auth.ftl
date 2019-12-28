@@ -1,6 +1,6 @@
 <html>
-<head><title>Auth</title>
 
+<head><title>Shop</title></head>
 <body>
 <h1>${err}</h1>
 <form name="user" action="/logIn" method="post">

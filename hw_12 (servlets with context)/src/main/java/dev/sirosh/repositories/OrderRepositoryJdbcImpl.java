@@ -11,6 +11,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 public class OrderRepositoryJdbcImpl implements CrudRepository<Order> {
@@ -108,15 +109,18 @@ public class OrderRepositoryJdbcImpl implements CrudRepository<Order> {
                 List<Order> orders = new ArrayList<>();
 
                 while (rs.next()) {
-                    Order order = (orderRowMapper.mapRow(rs));
-                    AddressRepositoryJdbcImpl arji = new AddressRepositoryJdbcImpl(connection);
-                    order.setAddress(arji.find((int) order.getAddressId()).get());
                     try {
-                        order.setProductList(getProducts(order));
-                    } catch (IllegalStateException e) {
-                        order.setProductList(new ArrayList<>());
-                    }
-                    orders.add(order);
+                        Order order = (orderRowMapper.mapRow(rs));
+
+                        AddressRepositoryJdbcImpl arji = new AddressRepositoryJdbcImpl(connection);
+                        order.setAddress(arji.find((int) order.getAddressId()).get());
+                        try {
+                            order.setProductList(getProducts(order));
+                        } catch (IllegalStateException e) {
+                            order.setProductList(new ArrayList<>());
+                        }
+                        orders.add(order);
+                    } catch (NoSuchElementException ignored) { }
                 }
 
                 return orders;

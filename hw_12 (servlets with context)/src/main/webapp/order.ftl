@@ -2,14 +2,18 @@
 
 <head><title>Shop</title></head>
 <body>
-<h1>Cart</h1>
+
+<h4>Order id:${order.id}</h4>
+<h4>Order address:${order.dtoAddress.description}</h4>
+<h4>Order status:${order.status}</h4>
+<h4>Order products:</h4>
 <table class="datatable">
     <tr>
         <th>name</th>
         <th>description</th>
         <th>cost</th>
     </tr>
-    <#list products as product>
+    <#list order.dtoProductList as product>
         <tr>
             <td>${product.name}</td>
             <td>${product.description}</td>
@@ -17,8 +21,6 @@
         </tr>
     </#list>
 </table>
-<form method="get" action="/makeOrder">
-    <button>MakeOrder</button>
-</form>
+
 </body>
 </html>

@@ -29,14 +29,12 @@ public class MainPageServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        System.out.println("asdasdasd_1");
         doGet(req, resp);
     }
 
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        System.out.println("asdasdasd2");
         long page = 0L;
         String username = "";
         if (req.getParameter("page") != null) {

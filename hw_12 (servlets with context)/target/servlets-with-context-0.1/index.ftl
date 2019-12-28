@@ -1,6 +1,6 @@
 <html>
-<head><title>ViralPatel.net - FreeMarker Hello World</title>
 
+<head><title>Shop</title></head>
 <body>
 <#if username=="">
     <h1><a href="/auth">SignIn</a></h1>
