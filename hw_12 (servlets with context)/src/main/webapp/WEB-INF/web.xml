@@ -49,6 +49,14 @@
         <url-pattern>*.ftl</url-pattern>
     </servlet-mapping>
 
+    <servlet>
+        <servlet-name>register</servlet-name>
+        <servlet-class>dev.sirosh.servlets.RegisterServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>register</servlet-name>
+        <url-pattern>/register</url-pattern>
+    </servlet-mapping>
 
 
     <!--

@@ -2,15 +2,23 @@
 <head><title>ViralPatel.net - FreeMarker Hello World</title>
 
 <body>
-<h1><a href="/auth">SignIn</a></h1>
-
+<#if username=="">
+    <h1><a href="/auth">SignIn</a></h1>
+<#else>
+    <h1>Username: ${username}</h1>
+</#if>
 <table class="datatable">
     <tr>
-        <th>Firstname</th>  <th>Lastname</th>
+        <th>name</th>
+        <th>description</th>
+        <th>cost</th>
+        <th>addToCart</th>
     </tr>
     <#list products as product>
         <tr>
-            <td>${product.name}</td> <td>${product.description}</td> <td>${product.cost}</td>
+            <td>${product.name}</td>
+            <td>${product.description}</td>
+            <td>${product.cost}</td>
         </tr>
     </#list>
 </table>
