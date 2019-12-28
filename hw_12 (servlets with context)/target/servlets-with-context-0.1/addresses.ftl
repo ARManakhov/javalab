@@ -1,5 +1,5 @@
 <html>
-
+<link rel="stylesheet" type="text/css" href="style.css">
 <head><title>Shop</title></head>
 <body>
 <h1>Cart</h1>

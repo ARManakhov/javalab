@@ -1,5 +1,6 @@
 <html>
 
+<link rel="stylesheet" type="text/css" href="style.css">
 <head><title>Shop</title></head>
 <body>
 <#if username=="">
@@ -17,6 +18,10 @@
         <th>description</th>
         <th>cost</th>
         <th>addToCart</th>
+        <#if isAdmin>
+            <th>delete</th>
+        </#if>
+
     </tr>
     <#list products as product>
         <tr>
@@ -28,11 +33,40 @@
                     <button>add to cart</button>
                 </form>
             </td>
+            <#if isAdmin>
+                <td>
+                    <form action="delProduct?id=${product.id}" method="post">
+                        <button>delete</button>
+                    </form>
+                </td>
+            </#if>
         </tr>
     </#list>
 </table>
 
-<h2><a href="/?page=${prevPage}"> < </a>${curentPage} / ${maxPage}<a href="/?page=${nextPage}"> > </a> </h2>
-
+<h2><a href="/?page=${prevPage}"> < </a>${curentPage} / ${maxPage}<a href="/?page=${nextPage}"> > </a></h2>
+<#if isAdmin>
+    <h1>New Product</h1>
+    <form action="/newproduct" method="post">
+        <div>
+            <label> Name
+                <input name="name">
+            </label>
+        </div>
+        <div>
+            <label> Description
+                <input name="description">
+            </label>
+        </div>
+        <div>
+            <label>Cost
+                <input name="cost">
+            </label>
+        </div>
+        <div>
+            <input type="submit">
+        </div>
+    </form>
+</#if>
 </body>
 </html>

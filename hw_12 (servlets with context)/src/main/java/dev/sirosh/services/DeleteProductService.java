@@ -30,9 +30,7 @@ public class DeleteProductService {
         String status = null;
         if (user.getRole().equals("admin")) {
             Product product = ProductBuilder.aProduct()
-                    .withDescription(dtoProduct.getDescription())
-                    .withName(dtoProduct.getName())
-                    .withCost(dtoProduct.getCost())
+                    .withId(dtoProduct.getId())
                     .isDeleited(true)
                     .build();
             prji.delete(product);

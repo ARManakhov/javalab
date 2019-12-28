@@ -1,5 +1,6 @@
 <html>
 
+<link rel="stylesheet" type="text/css" href="style.css">
 <head><title>Shop</title></head>
 <body>
 <table class="datatable">

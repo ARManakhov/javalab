@@ -110,7 +110,7 @@ public class ProductRepositoryJdbcImpl implements CrudRepository<Product> {
     }
 
     public long getCount() {
-        String sqlQuery = "select count(*) from \"product\"";
+        String sqlQuery = "select count(*) from \"product\" where is_deleted = false";
         try (PreparedStatement stmt = connection.prepareStatement(sqlQuery)) {
 
             try (ResultSet rs = stmt.executeQuery()) {

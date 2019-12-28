@@ -4,6 +4,7 @@ import dev.sirosh.TokenizeUser;
 import dev.sirosh.dto.DtoGetList;
 import dev.sirosh.dto.DtoProduct;
 import dev.sirosh.dto.DtoProducts;
+import dev.sirosh.models.User;
 import dev.sirosh.services.GetProductsService;
 
 import javax.servlet.ServletConfig;
@@ -37,18 +38,23 @@ public class MainPageServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         long page = 0L;
         String username = "";
+        boolean isAdmin = false;
         if (req.getParameter("page") != null) {
             page = Long.parseLong(req.getParameter("page"));
         }
         if (req.getSession().getAttribute("token") != null) {
             String token = (String) req.getSession().getAttribute("token");
-            username = new TokenizeUser().decodeJwt(token).getUsername();
+            User user = new TokenizeUser().decodeJwt(token);
+            username = user.getUsername();
+            isAdmin = user.getRole().equals("admin");
         }
+
         DtoProducts dtoProducts = ((DtoProducts) getProductsService.execute(new DtoGetList(page * 5, 5)));
         List<DtoProduct> productList = dtoProducts.getProducts();
-        long maxPage = dtoProducts.getTotalCount() / 5;
-        req.setAttribute("prevPage", page == 0? 0 : page-1);
-        req.setAttribute("nextPage", page <= maxPage-1 ? maxPage-1 : 1+page) ;
+        long maxPage = (dtoProducts.getTotalCount() / 5) + 1;
+        req.setAttribute("isAdmin", isAdmin);
+        req.setAttribute("prevPage", page == 0 ? 0 : page - 1);
+        req.setAttribute("nextPage", page  <= maxPage ?  page : maxPage);
         req.setAttribute("username", username);
         req.setAttribute("products", productList);
         req.setAttribute("curentPage", ++page);
