@@ -1,8 +1,0 @@
-<component name="ArtifactManager">
-  <artifact type="war" name="servlets-with-context:war">
-    <output-path>$PROJECT_DIR$/target</output-path>
-    <root id="archive" name="servlets-with-context-0.1.war">
-      <element id="javaee-facet-resources" facet="servlets-with-context/web/Web" />
-    </root>
-  </artifact>
-</component>

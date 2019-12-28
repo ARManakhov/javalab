@@ -7,8 +7,8 @@
 <#else>
     <h1>Username: ${username}</h1>
     <h1><a href="/getcart">Cart</a></h1>
-    <h1><a href="/auth">Orders</a></h1>
-    <h1><a href="/auth">Addresses</a></h1>
+    <h1><a href="/orders">Orders</a></h1>
+    <h1><a href="/addresses">Addresses</a></h1>
 
 </#if>
 <table class="datatable">
