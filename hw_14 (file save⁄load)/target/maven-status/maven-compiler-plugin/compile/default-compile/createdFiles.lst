@@ -1,0 +1,10 @@
+ru/itis/servlets/repositories/FileRepositoryJdbcTemplateImpl.class
+ru/itis/servlets/models/FileInfo.class
+ru/itis/servlets/listeners/SpringContextServletContextListener.class
+ru/itis/servlets/controllers/FilesController.class
+ru/itis/servlets/config/ApplicationContextConfig.class
+ru/itis/servlets/services/FileService.class
+ru/itis/servlets/services/FileServiceImpl.class
+ru/itis/servlets/models/FileInfo$FileInfoBuilder.class
+ru/itis/servlets/repositories/FileRepository.class
+ru/itis/servlets/repositories/CrudRepository.class

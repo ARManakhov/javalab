@@ -3,21 +3,20 @@ package ru.itis.servlets.config;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.stereotype.Component;
+import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 import org.springframework.web.servlet.ViewResolver;
-import org.springframework.web.servlet.handler.BeanNameUrlHandlerMapping;
-import org.springframework.web.servlet.view.InternalResourceViewResolver;
-
-import javax.servlet.MultipartConfigElement;
+import org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer;
+import org.springframework.web.servlet.view.freemarker.FreeMarkerViewResolver;
+import javax.mail.PasswordAuthentication;
+import javax.mail.Session;
 import javax.sql.DataSource;
+import java.util.Properties;
 
 @Component
 @PropertySource("classpath:application.properties")
@@ -25,6 +24,11 @@ public class ApplicationContextConfig {
 
     @Autowired
     private Environment environment;
+
+    @Bean(name = "uploadsDir")
+    public String uploadsDir(){
+        return environment.getProperty("storage.path");
+    }
 
     @Bean
     public JdbcTemplate jdbcTemplate() {
@@ -50,12 +54,13 @@ public class ApplicationContextConfig {
         config.setDriverClassName(environment.getProperty("db.driver"));
         return config;
     }
-    
+
     @Bean
     public ViewResolver viewResolver() {
-        InternalResourceViewResolver viewResolver = new InternalResourceViewResolver();
-        viewResolver.setPrefix("WEB-INF/jsp/");
-        viewResolver.setSuffix(".jsp");
+        FreeMarkerViewResolver viewResolver = new FreeMarkerViewResolver();
+        viewResolver.setCache(true);
+        viewResolver.setPrefix("");
+        viewResolver.setSuffix(".ftlh");
         return viewResolver;
     }
 
@@ -64,11 +69,38 @@ public class ApplicationContextConfig {
         return new HikariDataSource(hikariConfig());
     }
 
+
+
+    @Bean(name = "multipartResolver")
+    public CommonsMultipartResolver multipartResolver() {
+        CommonsMultipartResolver multipartResolver = new CommonsMultipartResolver();
+        multipartResolver.setMaxUploadSize(10000000);
+        return multipartResolver;
+    }
+
     @Bean
-    MultipartConfigElement multipartConfigElement() {
-        MultipartConfigFactory factory = new MultipartConfigFactory();
-        factory.setMaxFileSize("128KB");
-        factory.setMaxRequestSize("128KB");
-        return factory.createMultipartConfig();
+    public FreeMarkerConfigurer freemarkerConfig() {
+        FreeMarkerConfigurer freeMarkerConfigurer = new FreeMarkerConfigurer();
+        freeMarkerConfigurer.setTemplateLoaderPath("/WEB-INF/templates");
+        return freeMarkerConfigurer;
+    }
+
+    @Bean(name = "mailSession")
+    public Session mailSession() {
+        Properties properties = new Properties();
+        properties.put("mail.smtp.host", "smtp.gmail.com");
+        properties.put("mail.smtp.port", "465");
+        properties.put("mail.smtp.ssl.enable", "true");
+        properties.put("mail.smtp.auth", "true");
+        return  Session.getInstance(properties, new javax.mail.Authenticator() {
+
+            protected PasswordAuthentication getPasswordAuthentication() {
+
+                return new PasswordAuthentication("sheih000@gmail.com", "lhwrsqptcvdowoeo");//не крадите мой пароль пожалуйста D ;
+
+            }
+
+        });
+
     }
 }
