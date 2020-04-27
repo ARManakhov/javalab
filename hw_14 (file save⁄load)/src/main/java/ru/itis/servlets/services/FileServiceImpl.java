@@ -20,8 +20,8 @@ public class FileServiceImpl implements FileService {
     @Autowired
     FileRepository fileRepository;
 
-    @Autowired
-    MailService mailService;
+//    @Autowired
+//    MailService mailService;
 
     @Override
     public Optional<FileInfo> getFile(String url) {
@@ -47,7 +47,7 @@ public class FileServiceImpl implements FileService {
             e.printStackTrace();
             return Optional.empty();
         }
-        mailService.sendFileUrl(fileInfo);
+        //mailService.sendFileUrl(fileInfo);
         return Optional.of(fileInfo);
     }
 
