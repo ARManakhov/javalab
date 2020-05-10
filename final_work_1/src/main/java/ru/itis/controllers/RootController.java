@@ -16,7 +16,7 @@ public class RootController {
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public String getRootPage(Model model, Principal principal) {
         if (principal != null) {
-            return "redirect:/profile";
+            return "redirect:/users";
         } else {
             return "redirect:/signIn";
         }

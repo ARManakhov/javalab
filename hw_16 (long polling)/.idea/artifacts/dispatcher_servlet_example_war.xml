@@ -1,0 +1,14 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="dispatcher-servlet-example:war">
+    <output-path>$PROJECT_DIR$/target</output-path>
+    <properties id="maven-jee-properties">
+      <options>
+        <module>dispatcher-servlet-example</module>
+        <packaging>war</packaging>
+      </options>
+    </properties>
+    <root id="archive" name="dispatcher-servlet-example-0.1.war">
+      <element id="artifact" artifact-name="dispatcher-servlet-example:war exploded" />
+    </root>
+  </artifact>
+</component>

@@ -33,6 +33,6 @@ public class SignUpServiceImpl implements SignUpService {
                 .createdAt(LocalDateTime.now())
                 .build();
 
-        userRepository.save(user);
+        userRepository.save( user);
     }
 }

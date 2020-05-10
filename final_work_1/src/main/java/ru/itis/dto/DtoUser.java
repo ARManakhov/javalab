@@ -13,16 +13,16 @@ public class DtoUser {
     String email;
     String password;
 
-    public static DtoUser from(User user) {
+    public static DtoUser from(User userSimple) {
         return DtoUser.builder()
-                .email(user.getEmail())
-                .name(user.getName())
-                .id(user.getId())
+                .email(userSimple.getEmail())
+                .name(userSimple.getName())
+                .id(userSimple.getId())
                 .build();
     }
 
-    public static List<DtoUser> from(List<User> users) {
-        return users.stream()
+    public static List<DtoUser> from(List<User> userSimples) {
+        return userSimples.stream()
                 .map(DtoUser::from)
                 .collect(Collectors.toList());
     }

@@ -1,5 +1,6 @@
 package ru.itis.controllers;
 
+import com.sun.org.apache.xpath.internal.operations.Mod;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,10 +16,17 @@ public class UsersController {
     @Autowired
     private UsersService usersService;
 
+    @RequestMapping(value = "/users", method = RequestMethod.GET)
+    public String getUsers(Model model) {
 
-    @RequestMapping(value = "/users/{user-id}/delete", method = RequestMethod.GET)
+        model.addAttribute("users", usersService.getUsers());
+        return "users";
+    }
+
+
+/*    @RequestMapping(value = "/users/{user-id}/delete", method = RequestMethod.GET)
     public String deleteUser(@PathVariable("user-id") Long userId) {
         usersService.deleteUser(userId);
         return "redirect:/users";
-    }
+    }*/
 }
