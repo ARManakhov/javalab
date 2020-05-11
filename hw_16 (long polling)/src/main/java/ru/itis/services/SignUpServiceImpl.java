@@ -28,11 +28,11 @@ public class SignUpServiceImpl implements SignUpService {
                 .email(form.getEmail())
                 .hashPassword(passwordEncoder.encode(form.getPassword()))
                 .name(form.getName())
-                .state(State.NOT_CONFIRMED)
+                .state(State.CONFIRMED)
                 .role(Role.USER)
                 .createdAt(LocalDateTime.now())
                 .build();
 
-        userRepository.save(user);
+        userRepository.save( user);
     }
 }

@@ -1,18 +1,19 @@
 package ru.itis.models;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Set;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 @Entity
+@Getter
+@Setter
 @Table(name = "users")
 public class User {
     @Id
@@ -24,4 +25,7 @@ public class User {
     Role role;
     State state;
     LocalDateTime createdAt;
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "author")
+    List<Message> message;
+
 }

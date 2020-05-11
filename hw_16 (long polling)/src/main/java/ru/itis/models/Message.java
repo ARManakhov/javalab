@@ -5,8 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.sql.Timestamp;
 @Data
 @AllArgsConstructor
@@ -15,8 +14,12 @@ import java.sql.Timestamp;
 @Entity
 @Table(name = "message")
 public class Message {
-    long senderId;
-    long getterId;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    long id;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "authorId")
+    User author;
     String text;
     Timestamp sendTime;
 }
