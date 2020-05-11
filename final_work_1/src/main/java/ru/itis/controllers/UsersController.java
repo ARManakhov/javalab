@@ -2,13 +2,17 @@ package ru.itis.controllers;
 
 import com.sun.org.apache.xpath.internal.operations.Mod;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import ru.itis.dto.DtoUser;
+import ru.itis.models.User;
+import ru.itis.security.details.UserDetailsImpl;
 import ru.itis.services.UsersService;
 
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 public class UsersController {
@@ -23,10 +27,24 @@ public class UsersController {
         return "users";
     }
 
+    @RequestMapping(value = "/profile", method = RequestMethod.GET)
+    public String getProfile(Authentication authentication) {
+        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+        User userSimple = userDetails.getUser();
+        return "redirect:/profile/" + userSimple.getId();
+    }
 
-/*    @RequestMapping(value = "/users/{user-id}/delete", method = RequestMethod.GET)
-    public String deleteUser(@PathVariable("user-id") Long userId) {
-        usersService.deleteUser(userId);
-        return "redirect:/users";
-    }*/
+    @RequestMapping(value = "/profile/{id}", method = RequestMethod.GET)
+    public String getProfile(Model model, Authentication authentication, @PathVariable Long id) {
+        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+        Optional<User> fullUserO = usersService.getUser(userDetails.getUser().getId());
+        if (fullUserO.isPresent()) {
+            model.addAttribute("user",fullUserO.get());
+            return "profile";
+        } else {
+            return "redirect:404";
+        }
+    }
+
+
 }
