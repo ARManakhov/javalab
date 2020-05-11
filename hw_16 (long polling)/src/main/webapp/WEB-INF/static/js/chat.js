@@ -27,7 +27,7 @@ function receiveMessage() {
         dataType: "json",
         contentType: "application/json",
         success: function (response) {
-            $('#messages').first().after('<li>' + response[0].authorName + ': ' + response[0].text + '</li>');
+            $('#messages').first().append('<div>' + response[0].authorName + ': ' + response[0].text + '</div>');
             receiveMessage();
         }
     })

@@ -20,8 +20,8 @@
 </div>
 <div>
     <ul id="messages">
-    <#list history as msg >
-        <li> ${msg.author.name}: ${msg.text}</li>
+    <#list history?reverse as msg >
+        <div> ${msg.author.name}: ${msg.text}</div>
     </#list>
     </ul>
 </div>
