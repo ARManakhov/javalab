@@ -2,6 +2,7 @@ package ru.itis.repositories;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 import ru.itis.models.Post;
 
 import javax.persistence.EntityManager;
@@ -14,10 +15,9 @@ public class PostRepositoryImpl implements PostRepository {
     private EntityManager entityManager;
 
     @Override
+    @Transactional
     public boolean save(Post entity) {
-        entityManager.getTransaction().begin();
         entityManager.persist(entityManager);
-        entityManager.getTransaction().commit();
         return true;
     }
 

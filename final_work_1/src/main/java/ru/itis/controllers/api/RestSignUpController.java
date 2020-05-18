@@ -19,6 +19,6 @@ public class RestSignUpController {
     @RequestMapping(value = "/signUp", method = RequestMethod.POST)
     public String signUp(SignUpDto form) {
         service.signUp(form);
-        return "redirect:/signIn";
+        return "redirect:/api/signIn";
     }
 }

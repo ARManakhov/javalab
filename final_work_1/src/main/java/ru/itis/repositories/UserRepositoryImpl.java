@@ -36,6 +36,16 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
+    public Optional<User> findUserByName(String name) {
+        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+        CriteriaQuery<User> cr = cb.createQuery(User.class);
+        Root<User> root = cr.from(User.class);
+        cr.select(root).where(cb.equal(root.get("name"), name));
+        TypedQuery<User> query = entityManager.createQuery(cr);
+        return Optional.of(query.getSingleResult());
+    }
+
+    @Override
     @Transactional
     public boolean save(User entity) {
         entityManager.persist(entity);
