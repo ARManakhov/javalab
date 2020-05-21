@@ -13,6 +13,8 @@ import javax.servlet.annotation.WebListener;
 public class SpringContextServletContextListener implements ServletContextListener {
 
     public void contextInitialized(ServletContextEvent servletContextEvent) {
+
+
         ApplicationContext springContext = new AnnotationConfigApplicationContext(ApplicationContextConfig.class);
         ServletContext servletContext = servletContextEvent.getServletContext();
         servletContext.setAttribute("springContext", springContext);

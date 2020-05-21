@@ -21,9 +21,9 @@ public class Post {
     String text;
     String header;
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "authorId")
+    @JoinColumn(name = "authorId", nullable = false)
     User author;
-    @OneToMany(fetch = FetchType.EAGER,mappedBy = "author")
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "post")
     List<PostComment> comments;
 
 }

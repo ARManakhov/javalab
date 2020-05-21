@@ -21,6 +21,9 @@
             <input type="password" name="password" placeholder="Пароль">
         </div>
         <div>
+            <input type="password" name="passwordCheck" placeholder="Повтор пароля">
+        </div>
+        <div>
             <input type="submit" value="зарегистрироватся">
         </div>
         <a href="/signIn"> Уже есть аккаунт</a>

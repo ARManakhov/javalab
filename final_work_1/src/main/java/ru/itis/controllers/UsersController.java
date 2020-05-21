@@ -17,6 +17,7 @@ public class UsersController {
     @Autowired
     private UsersService usersService;
 
+
     @RequestMapping(value = "/users", method = RequestMethod.GET)
     public String getUsers(Model model) {
 
@@ -28,15 +29,20 @@ public class UsersController {
     public String getProfile(Authentication authentication) {
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
         User userSimple = userDetails.getUser();
+
         return "redirect:/profile/" + userSimple.getId();
     }
 
     @RequestMapping(value = "/profile/{id}", method = RequestMethod.GET)
     public String getProfile(Model model, Authentication authentication, @PathVariable Long id) {
-        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
-        Optional<User> fullUserO = usersService.getUser(userDetails.getUser().getId());
+        if (authentication != null) {
+            UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+            model.addAttribute("client", userDetails.getUser());
+        }
+        Optional<User> fullUserO = usersService.getUser(id);
         if (fullUserO.isPresent()) {
-            model.addAttribute("user",fullUserO.get());
+            User user = fullUserO.get();
+            model.addAttribute("user", user);
             return "profile";
         } else {
             return "redirect:404";

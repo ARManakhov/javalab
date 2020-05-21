@@ -5,9 +5,7 @@ import lombok.*;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Set;
 
-@Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
@@ -25,8 +23,12 @@ public class User {
     Role role;
     State state;
     LocalDateTime createdAt;
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "author")
+    @OneToMany(fetch = FetchType.EAGER,mappedBy = "author")
     List<Post> posts;
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "author")
     List<PostComment> comments;
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
+    List<PostLike> likes;
+
+
 }

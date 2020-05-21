@@ -65,12 +65,12 @@ public class UserRepositoryImpl implements UserRepository {
     @Override
     @Transactional
     public Optional<User> findById(Long aLong) {
-        User user = entityManager.find(User.class, aLong);
-        entityManager.detach(user);
-        if (user != null) {
-            return Optional.of(user);
-        }
-        return Optional.empty();
+        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+        CriteriaQuery<User> cr = cb.createQuery(User.class);
+        Root<User> root = cr.from(User.class);
+        cr.select(root).where(cb.equal(root.get("id"), aLong));
+        TypedQuery<User> query = entityManager.createQuery(cr);
+        return Optional.of(query.getSingleResult());
     }
 
     @Override

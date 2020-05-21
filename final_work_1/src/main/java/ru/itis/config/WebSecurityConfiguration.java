@@ -61,7 +61,7 @@ public class WebSecurityConfiguration {
         protected void configure(HttpSecurity http) throws Exception {
             http.formLogin().loginPage("/signIn").loginProcessingUrl("/authentication").permitAll();
             http.authorizeRequests()
-                    .antMatchers("/signUp").permitAll()
+                    .antMatchers("/signUp","/profile/**").permitAll()
                     .antMatchers("/users").hasAuthority("ADMIN")
                     .antMatchers("/profile").authenticated()
                     .antMatchers("/").authenticated();

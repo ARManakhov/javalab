@@ -17,7 +17,7 @@ public class PostRepositoryImpl implements PostRepository {
     @Override
     @Transactional
     public boolean save(Post entity) {
-        entityManager.persist(entityManager);
+        entityManager.persist(entity);
         return true;
     }
 
