@@ -5,7 +5,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import ru.itis.dto.SignUpDto;
+import ru.itis.dto.DtoSignUp;
 import ru.itis.services.SignUpService;
 
 @Controller
@@ -23,7 +23,7 @@ public class SignUpController {
     }
 
     @RequestMapping(value = "/signUp", method = RequestMethod.POST)
-    public String signUp(SignUpDto form) {
+    public String signUp(DtoSignUp form) {
         service.signUp(form);
         return "redirect:/signIn";
     }

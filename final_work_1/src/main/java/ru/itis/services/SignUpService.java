@@ -1,8 +1,8 @@
 package ru.itis.services;
 
 
-import ru.itis.dto.SignUpDto;
+import ru.itis.dto.DtoSignUp;
 
 public interface SignUpService {
-    void signUp(SignUpDto form);
+    void signUp(DtoSignUp form);
 }

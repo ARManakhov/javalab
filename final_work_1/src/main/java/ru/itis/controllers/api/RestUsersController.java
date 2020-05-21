@@ -2,17 +2,20 @@ package ru.itis.controllers.api;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import ru.itis.dto.DtoUser;
 import ru.itis.models.User;
 import ru.itis.security.details.UserDetailsImpl;
 import ru.itis.services.UsersService;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
+
+import static org.springframework.http.ResponseEntity.ok;
 
 @RestController
 @RequestMapping(path = "api", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -28,23 +31,27 @@ public class RestUsersController {
         return "users";
     }
 
-    @RequestMapping(value = "/profile", method = RequestMethod.GET)
-    public String getProfile(Authentication authentication) {
-        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
-        User userSimple = userDetails.getUser();
-        return "redirect:/profile/" + userSimple.getId();
+    @GetMapping("/api/profile/")
+    ResponseEntity getProfile(Authentication authentication) {
+        User user = ((UserDetailsImpl) authentication.getPrincipal()).getUser();
+        Optional<User> userO = usersService.getUser(user.getId());
+        Map<Object, Object> model = new HashMap<>();
+        if (userO.isPresent()) {
+            return ok(DtoUser.getDto(userO.get()));
+        }
+        return ok(model);
+
     }
 
-    @RequestMapping(value = "/profile/{id}", method = RequestMethod.GET)
-    public String getProfile(Model model, Authentication authentication, @PathVariable Long id) {
-        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
-        Optional<User> fullUserO = usersService.getUser(userDetails.getUser().getId());
-        if (fullUserO.isPresent()) {
-            model.addAttribute("user",fullUserO.get());
-            return "profile";
-        } else {
-            return "redirect:404";
+    @GetMapping("/api/profile/{id}")
+    ResponseEntity getProfileById(@PathVariable Long id) {
+        Optional<User> userO = usersService.getUser(id);
+        Map<Object, Object> model = new HashMap<>();
+        if (userO.isPresent()) {
+            return ok(DtoUser.getDto(userO.get()));
         }
+        return ok(model);
+
     }
 
 

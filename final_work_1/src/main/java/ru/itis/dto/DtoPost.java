@@ -11,7 +11,7 @@ import javax.persistence.*;
 @Builder
 @Getter
 @Setter
-public class PostDto {
+public class DtoPost {
     long id;
     String text;
     String header;

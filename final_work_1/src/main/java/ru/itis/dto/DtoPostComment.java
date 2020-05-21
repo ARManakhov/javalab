@@ -11,6 +11,6 @@ import javax.persistence.*;
 @Builder
 @Getter
 @Setter
-public class PostCommentDto {
+public class DtoPostComment {
     String text;
 }

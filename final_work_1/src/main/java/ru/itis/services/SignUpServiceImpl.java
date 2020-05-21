@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
-import ru.itis.dto.SignUpDto;
+import ru.itis.dto.DtoSignUp;
 import ru.itis.models.Role;
 import ru.itis.models.State;
 import ru.itis.models.User;
@@ -23,7 +23,7 @@ public class SignUpServiceImpl implements SignUpService {
     private PasswordEncoder passwordEncoder;
 
     @Override
-    public void signUp(SignUpDto form) {
+    public void signUp(DtoSignUp form) {
         User user = User.builder()
                 .email(form.getEmail())
                 .hashPassword(passwordEncoder.encode(form.getPassword()))

@@ -27,4 +27,11 @@ public class DtoUser {
                 .collect(Collectors.toList());
     }
 
+    public static DtoUser getDto(User user) {
+        return DtoUser.builder()
+                .id(user.getId())
+                .email(user.getEmail())
+                .name(user.getName())
+                .build();
+    }
 }
