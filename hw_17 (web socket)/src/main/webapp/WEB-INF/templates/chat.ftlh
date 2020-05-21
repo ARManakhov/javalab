@@ -11,9 +11,9 @@
             integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
             crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
-    <script src="js/chat.js"></script>
+    <script src="/js/chat.js"></script>
 </head>
-<body onload="connect()">
+<body onload="connect(${id})">
 <h1>Добро пожаловать в чат, ${user.name}</h1>
 <div>
     <label for="message">Текст сообщения</label>

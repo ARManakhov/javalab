@@ -6,10 +6,5 @@ import org.springframework.data.repository.CrudRepository;
 import ru.itis.models.Message;
 import ru.itis.models.Room;
 
-import java.util.List;
-
-public interface MessageRepository  extends CrudRepository<Message,Long> {
-    Page<Message> findAll(Pageable pageable);
-    Page<Message> findAllByRoom(Pageable pageable, Room room);
-
+public interface RoomRepository extends CrudRepository<Room,Long> {
 }

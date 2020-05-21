@@ -11,6 +11,7 @@ import org.springframework.web.socket.config.annotation.EnableWebSocket;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 import ru.itis.dto.MessageDto;
 import ru.itis.models.Message;
+import ru.itis.models.Room;
 import ru.itis.models.User;
 import ru.itis.security.details.UserDetailsImpl;
 import ru.itis.services.MessageService;
@@ -25,7 +26,7 @@ import java.util.*;
 @EnableWebSocket
 public class WebSocketMessagesHandler extends TextWebSocketHandler {
 
-    private static final Map<String, WebSocketSession> sessions = new HashMap<>();
+    private static final Set<WebSocketSession> sessions = new HashSet<>();
 
     @Autowired
     private ObjectMapper objectMapper;
@@ -36,19 +37,21 @@ public class WebSocketMessagesHandler extends TextWebSocketHandler {
     @Override
     public void handleMessage(WebSocketSession session, WebSocketMessage<?> message) throws IOException {
 
+        String id = (String) session.getAttributes().get("id");
         String messageText = (String) message.getPayload();
         MessageDto messageDtoFromJson = objectMapper.readValue(messageText, MessageDto.class);
         UsernamePasswordAuthenticationToken principal = (UsernamePasswordAuthenticationToken) session.getPrincipal();
         User user = ((UserDetailsImpl) principal.getPrincipal()).getUser();
         messageDtoFromJson.setAuthorName(user.getName());
         Date date = new Date();
-        messageService.saveMessage(Message.builder().author(user).text(messageDtoFromJson.getText()).sendTime(new Timestamp(date.getTime())).build());
-        if (!sessions.containsKey(messageDtoFromJson.getAuthorName())) {
-            sessions.put(user.getName(), session);
-        }
+        messageService.saveMessage(Message.builder().author(user).text(messageDtoFromJson.getText()).room(Room.builder().id(Long.parseLong(id)).build()).sendTime(new Timestamp(date.getTime())).build());
+        sessions.add(session);
 
-        for (WebSocketSession currentSession : sessions.values()) {
-            currentSession.sendMessage(new TextMessage(objectMapper.writeValueAsString(messageDtoFromJson)));
+        for (WebSocketSession currentSession : sessions) {
+            if (((String) session.getAttributes().get("id")).equals(id)) {
+
+                currentSession.sendMessage(new TextMessage(objectMapper.writeValueAsString(messageDtoFromJson)));
+            }
         }
     }
 }

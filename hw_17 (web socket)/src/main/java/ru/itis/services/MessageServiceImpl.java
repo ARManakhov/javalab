@@ -6,6 +6,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import ru.itis.models.Message;
+import ru.itis.models.Room;
 import ru.itis.repositories.MessageRepository;
 
 import java.util.List;
@@ -29,5 +30,10 @@ public class MessageServiceImpl  implements MessageService{
     @Override
     public List<Message> getLastTem() {
         return messageRepository.findAll(PageRequest.of(0,10,Sort.Direction.DESC, "id")).toList();
+    }
+
+    @Override
+    public List<Message> getLastTem(Long id) {
+        return messageRepository.findAllByRoom(PageRequest.of(0,10,Sort.Direction.DESC, "id"), Room.builder().id(id).build()).toList();
     }
 }

@@ -7,4 +7,6 @@ import java.util.List;
 public interface MessageService {
     boolean saveMessage(Message message);
     List<Message> getLastTem();
+    List<Message> getLastTem(Long id);
+
 }
