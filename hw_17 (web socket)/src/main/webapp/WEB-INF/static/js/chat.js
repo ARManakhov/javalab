@@ -2,7 +2,7 @@ var webSocket;
 function connect(id) {
     // webSocket = new WebSocket('ws://localhost:8080/chat');
     webSocket = new SockJS("http://localhost:8080/chat_ws/" + id+"/");
-    document.cookie = 'X-Authorization=' + '12345' + ';path=/';
+
 
     webSocket.onmessage = function receiveMessage(response) {
         let data = response['data'];

@@ -21,7 +21,7 @@ public class AuthHandshakeHandler implements HandshakeHandler {
     @Override
     public boolean doHandshake(ServerHttpRequest serverHttpRequest, ServerHttpResponse serverHttpResponse, WebSocketHandler webSocketHandler, Map<String, Object> map) throws HandshakeFailureException {
 
-        map.put("userPrincipal",serverHttpRequest.getPrincipal());
+       map.put("userPrincipal",serverHttpRequest.getPrincipal());
         return defaultHandshakeHandler.doHandshake(serverHttpRequest, serverHttpResponse, webSocketHandler, map);
     }
 }

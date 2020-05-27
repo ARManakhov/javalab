@@ -18,6 +18,7 @@ import ru.itis.filter.JwtTokenFilter;
 import ru.itis.provider.JwtTokenProvider;
 
 @EnableWebSecurity
+@Configuration
 public class WebSecurityConfiguration {
     @Bean
     public PasswordEncoder passwordEncoder() {

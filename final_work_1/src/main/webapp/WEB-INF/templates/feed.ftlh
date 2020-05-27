@@ -9,37 +9,12 @@
     <tr>
         <#include "sidePanel.ftlh">
         <td>
-            <div>Имя : ${user.name}</div>
-            <div>email : ${user.email}</div>
-            <div>Зарегестрирован : ${user.createdAt}</div>
-            <#if navUser?has_content >
-                <#if navUser == user>
-                    <div>
-                        <div>Добавить пост</div>
-                        <form action="/post" method="post">
-                            <div>
-                                <input name="header" placeholder="загаловок">
-                            </div>
-                            <div>
-                                <input name="text" placeholder="text">
-                            </div>
-                            <div>
-                                <input type="submit" value="отправить">
-                            </div>
-                        </form>
-                    </div>
-                <#else>
-                    <form action="/subscribe/${user.id}" method="post">
-                        <button>Подписатся</button>
-                    </form>
-                </#if>
-
-            </#if>
-            <#if user.posts?size != 0>
+            <div>Подписки</div>
+            <#if posts?size != 0>
                 <div>
-                    ${user.posts?size}
+                    ${posts?size}
                 </div>
-                <#list user.posts as post>
+                <#list posts as post>
                     <div>
                         <h1>${post.header}</h1>
                         <div>${post.text}</div>

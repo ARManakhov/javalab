@@ -1,6 +1,8 @@
 package ru.itis.models;
 
 import lombok.*;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -29,6 +31,10 @@ public class User {
     List<PostComment> comments;
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
     List<PostLike> likes;
-
-
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "subscriber")
+    @Fetch(value = FetchMode.SELECT)
+    List<Subscription> subscriptions;
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "author")
+    @Fetch(value = FetchMode.SELECT)
+    List<Subscription> subscribers;
 }

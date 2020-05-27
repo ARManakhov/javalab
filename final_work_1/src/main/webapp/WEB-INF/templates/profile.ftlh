@@ -7,20 +7,13 @@
 <body>
 <table>
     <tr>
-        <td>
-            <div>
-                <a href="/">Home </a>
-            </div>
-            <div>
-                <a href="/quit">Выйти </a>
-            </div>
-        </td>
+        <#include "sidePanel.ftlh">
         <td>
             <div>Имя : ${user.name}</div>
             <div>email : ${user.email}</div>
             <div>Зарегестрирован : ${user.createdAt}</div>
-            <#if client?has_content >
-                <#if client == user>
+            <#if navUser?has_content >
+                <#if navUser == user>
                     <div>
                         <div>Добавить пост</div>
                         <form action="/post" method="post">
@@ -35,7 +28,12 @@
                             </div>
                         </form>
                     </div>
+                <#else>
+                    <form action="/subscribe/${user.id}" method="post">
+                        <button>Подписатся</button>
+                    </form>
                 </#if>
+
             </#if>
             <#if user.posts?size != 0>
                 <div>

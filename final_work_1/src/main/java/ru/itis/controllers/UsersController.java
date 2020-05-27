@@ -37,7 +37,7 @@ public class UsersController {
     public String getProfile(Model model, Authentication authentication, @PathVariable Long id) {
         if (authentication != null) {
             UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
-            model.addAttribute("client", userDetails.getUser());
+            model.addAttribute("navUser", userDetails.getUser());
         }
         Optional<User> fullUserO = usersService.getUser(id);
         if (fullUserO.isPresent()) {
