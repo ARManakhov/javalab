@@ -7,8 +7,11 @@ function connect(id) {
     webSocket.onmessage = function receiveMessage(response) {
         let data = response['data'];
         let json = JSON.parse(data);
-        $('#messages').first().append("<div>" + json['authorName'] + ': ' + json['text'] + "</div>")
-    }
+        $('#messages').first().append("<div>" + json['authorName'] + ': ' + json['text'] + "</div>");
+    };
+    webSocket.onopen = function onopen(){
+    sendMessage("вошел в чат");
+        };
 }
 
 function sendMessage(text) {

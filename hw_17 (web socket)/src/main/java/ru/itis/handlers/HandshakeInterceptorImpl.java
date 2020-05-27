@@ -15,14 +15,16 @@ import java.util.Map;
 public class HandshakeInterceptorImpl implements HandshakeInterceptor {
     @Autowired
     RoomService roomService;
+
     @Override
     public boolean beforeHandshake(ServerHttpRequest request, ServerHttpResponse response, WebSocketHandler wsHandler, Map<String, Object> attributes) throws Exception {
 
         String[] path = request.getURI().getPath().split("/");
         String id = path[2];
-        if (roomService.getRoom(Long.valueOf(id)).isPresent()){
-        attributes.put("id", id);
-        return true;}else return false;
+        if (roomService.getRoom(Long.valueOf(id)).isPresent()) {
+            attributes.put("id", id);
+            return true;
+        } else return false;
     }
 
     @Override
@@ -30,4 +32,5 @@ public class HandshakeInterceptorImpl implements HandshakeInterceptor {
                                WebSocketHandler wsHandler, Exception exception) {
         // Nothing to do after handshake
     }
+
 }

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Component;
+import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketMessage;
 import org.springframework.web.socket.WebSocketSession;
@@ -26,7 +27,7 @@ import java.util.*;
 @EnableWebSocket
 public class WebSocketMessagesHandler extends TextWebSocketHandler {
 
-    private static final Set<WebSocketSession> sessions = new HashSet<>();
+    static final Set<WebSocketSession> sessions = new HashSet<>();
 
     @Autowired
     private ObjectMapper objectMapper;
@@ -44,14 +45,19 @@ public class WebSocketMessagesHandler extends TextWebSocketHandler {
         User user = ((UserDetailsImpl) principal.getPrincipal()).getUser();
         messageDtoFromJson.setAuthorName(user.getName());
         Date date = new Date();
-        messageService.saveMessage(Message.builder().author(user).text(messageDtoFromJson.getText()).room(Room.builder().id(Long.parseLong(id)).build()).sendTime(new Timestamp(date.getTime())).build());
-        sessions.add(session);
+        boolean added = sessions.add(session);
+        if (!added) messageService.saveMessage(Message.builder().author(user).text(messageDtoFromJson.getText()).room(Room.builder().id(Long.parseLong(id)).build()).sendTime(new Timestamp(date.getTime())).build());
+
 
         for (WebSocketSession currentSession : sessions) {
-            if (((String) session.getAttributes().get("id")).equals(id)) {
+            if (((String) currentSession.getAttributes().get("id")).equals(id)) {
 
                 currentSession.sendMessage(new TextMessage(objectMapper.writeValueAsString(messageDtoFromJson)));
             }
         }
+    }
+    @Override
+    public void afterConnectionClosed(WebSocketSession session, CloseStatus closeStatus){
+        sessions.remove(session);
     }
 }

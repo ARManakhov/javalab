@@ -12,8 +12,8 @@
             <div>Имя : ${user.name}</div>
             <div>email : ${user.email}</div>
             <div>Зарегестрирован : ${user.createdAt}</div>
-            <#if navUser?has_content >
-                <#if navUser == user>
+            <#if navUser?has_content>
+                <#if navUser.id == user.id>
                     <div>
                         <div>Добавить пост</div>
                         <form action="/post" method="post">
