@@ -9,18 +9,16 @@
     <tr>
         <#include "sidePanel.ftlh">
         <td>
-            <div>Подписки</div>
+            <div><@spring.message "feed.subscriptions"/></div>
             <#if posts?size != 0>
-                <div>
-                    ${posts?size}
-                </div>
+
                 <#list posts as post>
                     <div>
                         <h1>${post.header}</h1>
                         <div>${post.text}</div>
                         <div>${post.author.name}</div>
                     </div>
-                    <div>Коментарии</div>
+                    <div><@spring.message "post.comments"/></div>
                     <#list post.comments as comment>
                         <div>${comment.text}</div>
                         <div>${comment.author.name}</div>
@@ -31,8 +29,8 @@
                         <!-- inlcude csrf token -->
                         <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
                         <div>
-                            <input name="text" placeholder="коментарий">
-                            <input type="submit" value="отправить">
+                            <input name="text" placeholder="<@spring.message "comment.comment"/>">
+                            <input type="submit" value="<@spring.message "profile.send"/>">
                         </div>
                     </form>
                     <div>-</div>
@@ -40,7 +38,7 @@
 
             <#else>
                 <div>
-                    Здесь пока нет постов
+                    <@spring.message "post.noposts"/>
                 </div>
             </#if>
 

@@ -64,7 +64,7 @@ public class WebSecurityConfiguration {
                     .and()
                     .logout().deleteCookies("JSESSIONID")
                     .and()
-                    .rememberMe().key("rememberMe").tokenValiditySeconds(30);//86400
+                    .rememberMe().key("rememberMe").tokenValiditySeconds(5);//86400
             http.authorizeRequests()
                     .antMatchers("/signUp", "/profile/**").permitAll()
                     .antMatchers("/users").hasAuthority("ADMIN")

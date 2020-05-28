@@ -9,26 +9,24 @@
     <tr>
         <#include "sidePanel.ftlh">
         <td>
-            <div>${.locale}</div>
-            <div><@spring.message "profile.name"/></div>
-            <div>Имя : ${user.name}</div>
-            <div>email : ${user.email}</div>
-            <div>Зарегестрирован : ${user.createdAt}</div>
+            <div><@spring.message "profile.name"/>${user.name}</div>
+            <div><@spring.message "profile.email"/>${user.email}</div>
+            <div><@spring.message "profile.registrated"/> ${user.createdAt}</div>
             <#if navUser?has_content>
                 <#if navUser.id == user.id>
                     <div>
-                        <div>Добавить пост</div>
+                        <div><@spring.message "profile.addpost"/></div>
                         <form action="/post" method="post">
                             <!-- inlcude csrf token -->
                             <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
                             <div>
-                                <input name="header" placeholder="загаловок">
+                                <input name="header" placeholder="<@spring.message "post.header"/>">
                             </div>
                             <div>
-                                <input name="text" placeholder="text">
+                                <input name="text" placeholder="<@spring.message "post.text"/>">
                             </div>
                             <div>
-                                <input type="submit" value="отправить">
+                                <input type="submit" value="<@spring.message "profile.send"/>">
                             </div>
                         </form>
                     </div>
@@ -36,22 +34,19 @@
                     <form action="/subscribe/${user.id}" method="post">
                         <!-- inlcude csrf token -->
                         <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
-                        <button>Подписатся</button>
+                        <button><@spring.message "profile.subscribe"/></button>
                     </form>
                 </#if>
 
             </#if>
             <#if user.posts?size != 0>
-                <div>
-                    ${user.posts?size}
-                </div>
                 <#list user.posts as post>
                     <div>
                         <h1>${post.header}</h1>
                         <div>${post.text}</div>
                         <div>${post.author.name}</div>
                     </div>
-                    <div>Коментарии</div>
+                    <div><@spring.message "post.comments"/></div>
                     <#list post.comments as comment>
                         <div>${comment.text}</div>
                         <div>${comment.author.name}</div>
@@ -62,8 +57,8 @@
                         <!-- inlcude csrf token -->
                         <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
                         <div>
-                            <input name="text" placeholder="коментарий">
-                            <input type="submit" value="отправить">
+                            <input name="text" placeholder="<@spring.message "comment.comment"/>">
+                            <input type="submit" value="<@spring.message "profile.send"/>">
                         </div>
                     </form>
                     <div>-</div>
@@ -71,7 +66,7 @@
 
             <#else>
                 <div>
-                    Здесь пока нет постов
+                    <@spring.message "post.noposts"/>
                 </div>
             </#if>
 

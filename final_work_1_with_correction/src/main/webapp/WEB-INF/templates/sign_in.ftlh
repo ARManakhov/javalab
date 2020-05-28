@@ -8,27 +8,35 @@
     <title>Document</title>
 </head>
 <body>
-<h1>вход</h1>
-<div>
-    <form action="/authentication" method="post">
-        <!-- inlcude csrf token -->
-        <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
-        <div>
-            <input name="username" placeholder="Email">
-        </div>
-        <div>
-            <input type="password" name="password" placeholder="Пароль">
-        </div>
-        <div>
-            <input type="submit" value="войти">
-        </div>
-        <div>
-            <label>Запомнить меня
-                <input type="checkbox" name="remember-me" />
-            </label>
-        </div>
-        <a href="/signUp"> У меня нет аккаунта</a>
-    </form>
-</div>
+<table>
+    <tr>
+        <#include "sidePanel.ftlh">
+        <td>
+            <h1><@spring.message "auth.signing"/></h1>
+
+            <div>
+                <form action="/authentication" method="post">
+                    <!-- inlcude csrf token -->
+                    <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+                    <div>
+                        <input name="username" placeholder="<@spring.message "auth.mail"/>">
+                    </div>
+                    <div>
+                        <input type="password" name="password" placeholder="<@spring.message "auth.pass"/>">
+                    </div>
+                    <div>
+                        <input type="submit" value="<@spring.message "auth.signinbutton"/>">
+                    </div>
+                    <div>
+                        <label><@spring.message "auth.rememberme"/>
+                            <input type="checkbox" name="<@spring.message "auth.rememberme"/>"/>
+                        </label>
+                    </div>
+                    <a href="/signUp"><@spring.message "auth.noaccountbutton"/></a>
+                </form>
+            </div>
+        </td>
+    </tr>
+</table>
 </body>
 </html>

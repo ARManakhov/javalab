@@ -8,28 +8,35 @@
     <title>Document</title>
 </head>
 <body>
-<h1>Регистрация</h1>
-<div>
-    <form action="/signUp" method="post">
-        <!-- inlcude csrf token -->
-        <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
-        <div>
-            <input name="name" placeholder="Имя">
-        </div>
-        <div>
-            <input name="email" placeholder="Email">
-        </div>
-        <div>
-            <input type="password" name="password" placeholder="Пароль">
-        </div>
-        <div>
-            <input type="password" name="passwordCheck" placeholder="Повтор пароля">
-        </div>
-        <div>
-            <input type="submit" value="зарегистрироватся">
-        </div>
-        <a href="/signIn"> Уже есть аккаунт</a>
-    </form>
-</div>
+<table>
+    <tr>
+        <#include "sidePanel.ftlh">
+        <td>
+            <@spring.message "auth.signup"/>
+            <div>
+                <form action="/signUp" method="post">
+                    <!-- inlcude csrf token -->
+                    <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+                    <div>
+                        <input name="name" placeholder="<@spring.message "auth.username"/>">
+                    </div>
+                    <div>
+                        <input name="email" placeholder="<@spring.message "auth.mail"/>">
+                    </div>
+                    <div>
+                        <input type="password" name="password" placeholder="<@spring.message "auth.pass"/>">
+                    </div>
+                    <div>
+                        <input type="password" name="passwordCheck" placeholder="<@spring.message "auth.passcheck"/>">
+                    </div>
+                    <div>
+                        <input type="submit" value="<@spring.message "auth.signupbutton"/>">
+                    </div>
+                    <a href="/signIn"> <@spring.message "auth.hasaccountbutton"/></a>
+                </form>
+            </div>
+        </td>
+    </tr>
+</table>
 </body>
 </html>

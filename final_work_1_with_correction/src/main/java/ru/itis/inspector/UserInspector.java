@@ -27,7 +27,7 @@ public class UserInspector implements HandlerInterceptor {
 
                     User user = ((UserDetailsImpl) ((UsernamePasswordAuthenticationToken) userPrincipal).getPrincipal()).getUser();
 
-                   // modelAndView.getModel().put("navUser", user);
+                   modelAndView.getModel().put("navUser", user);
 
             }
         }

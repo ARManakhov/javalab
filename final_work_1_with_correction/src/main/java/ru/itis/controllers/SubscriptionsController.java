@@ -56,7 +56,6 @@ public class SubscriptionsController {
         }
         List<Post> postsSorted = posts.stream().sorted((p1, p2) -> (int) (p1.getId() - p2.getId())).collect(Collectors.toList());
         model.addAttribute("posts", postsSorted);
-        model.addAttribute("navUser", user);
         return "feed";
     }
 }
