@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import ru.itis.dto.DtoSignUp;
 import ru.itis.services.SignUpService;
 
+import javax.validation.Valid;
+
 @Controller
 public class SignUpController {
     @Autowired
@@ -23,7 +25,7 @@ public class SignUpController {
     }
 
     @RequestMapping(value = "/signUp", method = RequestMethod.POST)
-    public String signUp(DtoSignUp form) {
+    public String signUp(@Valid DtoSignUp form) {
         service.signUp(form);
         return "redirect:/signIn";
     }

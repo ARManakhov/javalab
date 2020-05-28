@@ -14,12 +14,14 @@ import ru.itis.models.User;
 import ru.itis.security.details.UserDetailsImpl;
 import ru.itis.services.PostService;
 
+import javax.validation.Valid;
+
 @Controller
 public class PostContorller {
     @Autowired
     PostService postService;
     @RequestMapping(value = "/post", method = RequestMethod.POST)
-    String newPost(Authentication authentication, DtoPost dtoPost) {
+    String newPost(Authentication authentication, @Valid DtoPost dtoPost) {
         User user = ((UserDetailsImpl) authentication.getPrincipal()).getUser();
         Post post = Post.builder().header(dtoPost.getHeader()).text(dtoPost.getText()).author(user).build();
         postService.addPost(post);
@@ -27,7 +29,7 @@ public class PostContorller {
     }
 
     @RequestMapping(value = "/post_comment/{id}", method = RequestMethod.POST)
-    String newPostComment(Authentication authentication, DtoPostComment postComment, @PathVariable("id") Long id) {
+    String newPostComment(Authentication authentication,@Valid DtoPostComment postComment, @PathVariable("id") Long id) {
         User user = ((UserDetailsImpl) authentication.getPrincipal()).getUser();
         PostComment comment = PostComment.builder().author(user).post(Post.builder().id(id).build()).text(postComment.getText()).build();
         postService.addComment(comment);
