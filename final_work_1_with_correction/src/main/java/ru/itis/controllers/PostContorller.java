@@ -20,6 +20,7 @@ import javax.validation.Valid;
 public class PostContorller {
     @Autowired
     PostService postService;
+
     @RequestMapping(value = "/post", method = RequestMethod.POST)
     String newPost(Authentication authentication, @Valid DtoPost dtoPost) {
         User user = ((UserDetailsImpl) authentication.getPrincipal()).getUser();
@@ -29,10 +30,18 @@ public class PostContorller {
     }
 
     @RequestMapping(value = "/post_comment/{id}", method = RequestMethod.POST)
-    String newPostComment(Authentication authentication,@Valid DtoPostComment postComment, @PathVariable("id") Long id) {
+    String newPostComment(Authentication authentication, @Valid DtoPostComment postComment, @PathVariable("id") Long id) {
         User user = ((UserDetailsImpl) authentication.getPrincipal()).getUser();
         PostComment comment = PostComment.builder().author(user).post(Post.builder().id(id).build()).text(postComment.getText()).build();
         postService.addComment(comment);
         return "redirect:/profile";
+    }
+
+    @RequestMapping(value = "/post_delete/{id}", method = RequestMethod.POST)
+    String deletePost(Authentication authentication, @PathVariable Long id) {
+        User user = ((UserDetailsImpl) authentication.getPrincipal()).getUser();
+        postService.delete(id, user);
+        return "redirect:/profile";
+
     }
 }

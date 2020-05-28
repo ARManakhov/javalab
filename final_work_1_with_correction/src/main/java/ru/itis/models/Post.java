@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -14,8 +15,9 @@ import java.util.List;
 @NoArgsConstructor
 @Builder
 @Entity
+@Where(clause = "isDeleted = false")
 @Table(name = "posts")
-public class Post{
+public class Post {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     long id;
@@ -26,5 +28,5 @@ public class Post{
     User author;
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "post")
     List<PostComment> comments;
-
+    boolean isDeleted; //for soft delete
 }

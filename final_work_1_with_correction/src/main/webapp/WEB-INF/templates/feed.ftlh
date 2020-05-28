@@ -17,6 +17,14 @@
                         <h1>${post.header}</h1>
                         <div>${post.text}</div>
                         <div>${post.author.name}</div>
+                        <#if post.author.id == navUser.id>
+                            <div>
+                                <form method="post" action="/post_delete/${post.id}">
+                                    <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+                                    <input type="submit" value="<@spring.message "post.delete"/>">
+                                </form>
+                            </div>
+                        </#if>
                     </div>
                     <div><@spring.message "post.comments"/></div>
                     <#list post.comments as comment>

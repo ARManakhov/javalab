@@ -15,10 +15,11 @@ public class PostRepositoryImpl extends PostRepository {
     private EntityManager entityManager;
 
 
-
-
-
-
-
-
+    @Override
+    @Transactional
+    public boolean delete(Post entity) {
+        entity.setDeleted(true);
+        update(entity);
+        return true;
+    }
 }
