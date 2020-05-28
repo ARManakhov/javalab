@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public class UserRepositoryImpl implements UserRepository {
+public class UserRepositoryImpl extends UserRepository {
     @PersistenceContext
     private EntityManager entityManager;
 
@@ -45,36 +45,7 @@ public class UserRepositoryImpl implements UserRepository {
         return Optional.of(query.getSingleResult());
     }
 
-    @Override
-    @Transactional
-    public boolean save(User entity) {
-        entityManager.persist(entity);
-        return true;
-    }
 
-    @Override
-    public boolean update(User entity) {
-        return false;
-    }
 
-    @Override
-    public boolean delete(User entity) {
-        return false;
-    }
 
-    @Override
-    @Transactional
-    public Optional<User> findById(Long aLong) {
-        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
-        CriteriaQuery<User> cr = cb.createQuery(User.class);
-        Root<User> root = cr.from(User.class);
-        cr.select(root).where(cb.equal(root.get("id"), aLong));
-        TypedQuery<User> query = entityManager.createQuery(cr);
-        return Optional.of(query.getSingleResult());
-    }
-
-    @Override
-    public List<User> findAll() {
-        return null;
-    }
 }

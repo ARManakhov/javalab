@@ -2,5 +2,10 @@ package ru.itis.repositories;
 
 import ru.itis.models.Post;
 
-public interface PostRepository extends CrudRepository<Post, Long> {
+import javax.sound.sampled.Port;
+
+public abstract class PostRepository extends CrudRepository<Post, Long> {
+    public PostRepository() {
+        super(Post.class);
+    }
 }

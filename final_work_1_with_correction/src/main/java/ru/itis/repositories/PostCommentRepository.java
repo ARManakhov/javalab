@@ -2,5 +2,8 @@ package ru.itis.repositories;
 
 import ru.itis.models.PostComment;
 
-public interface PostCommentRepository extends CrudRepository<PostComment, Long> {
+public abstract class PostCommentRepository extends CrudRepository<PostComment, Long> {
+    public PostCommentRepository() {
+        super(PostComment.class);
+    }
 }

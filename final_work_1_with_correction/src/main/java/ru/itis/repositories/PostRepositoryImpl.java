@@ -10,34 +10,15 @@ import javax.persistence.PersistenceContext;
 import java.util.List;
 import java.util.Optional;
 @Repository
-public class PostRepositoryImpl implements PostRepository {
+public class PostRepositoryImpl extends PostRepository {
     @PersistenceContext
     private EntityManager entityManager;
 
-    @Override
-    @Transactional
-    public boolean save(Post entity) {
-        entityManager.persist(entity);
-        return true;
-    }
 
-    @Override
-    public boolean update(Post entity) {
-        return false;
-    }
 
-    @Override
-    public boolean delete(Post entity) {
-        return false;
-    }
 
-    @Override
-    public Optional<Post> findById(Long aLong) {
-        return Optional.empty();
-    }
 
-    @Override
-    public List<Post> findAll() {
-        return null;
-    }
+
+
+
 }

@@ -1,10 +1,13 @@
 package ru.itis.repositories;
 
-import ru.itis.models.Post;
 import ru.itis.models.PostLike;
 
 import java.util.Optional;
 
-public interface PostLikeRepository extends CrudRepository<PostLike, Long> {
-    Optional<PostLike> findByEntity(PostLike postLike);
+public abstract class PostLikeRepository extends CrudRepository<PostLike, Long> {
+    public PostLikeRepository() {
+        super(PostLike.class);
+    }
+
+    public abstract Optional<PostLike> findByEntity(PostLike postLike);
 }

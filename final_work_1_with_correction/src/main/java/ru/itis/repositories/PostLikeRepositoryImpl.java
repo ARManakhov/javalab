@@ -14,39 +14,13 @@ import javax.persistence.criteria.Root;
 import java.util.List;
 import java.util.Optional;
 
-public class PostLikeRepositoryImpl implements PostLikeRepository {
+public class PostLikeRepositoryImpl extends PostLikeRepository {
     @PersistenceContext
     private EntityManager entityManager;
 
 
-    @Override
-    @Transactional
-    public boolean save(PostLike entity) {
-        entityManager.persist(entity);
-        return false;
-    }
 
-    @Override
-    public boolean update(PostLike entity) {
-        return false;
-    }
 
-    @Override
-    @Transactional
-    public boolean delete(PostLike entity) {
-        entityManager.remove(entity);
-        return true;
-    }
-
-    @Override
-    public Optional<PostLike> findById(Long aLong) {
-        return Optional.empty();
-    }
-
-    @Override
-    public List<PostLike> findAll() {
-        return null;
-    }
 
     @Override
     public Optional<PostLike> findByEntity(PostLike postLike) {

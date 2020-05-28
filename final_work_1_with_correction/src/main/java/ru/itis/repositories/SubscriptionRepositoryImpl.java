@@ -15,39 +15,16 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public class SubscriptionRepositoryImpl implements SubscriptionRepository {
+public class SubscriptionRepositoryImpl extends SubscriptionRepository {
     @PersistenceContext
     private EntityManager entityManager;
 
 
-    @Override
-    @Transactional
-    public boolean save(Subscription entity) {
-        entityManager.persist(entity);
-        return false;
-    }
 
-    @Override
-    public boolean update(Subscription entity) {
-        return false;
-    }
 
-    @Override
-    @Transactional
-    public boolean delete(Subscription entity) {
-        entityManager.remove(entity);
-        return true;
-    }
 
-    @Override
-    public Optional<Subscription> findById(Long aLong) {
-        return Optional.empty();
-    }
 
-    @Override
-    public List<Subscription> findAll() {
-        return null;
-    }
+
 
     @Override
     public Optional<Subscription> findByEntity(Subscription subscription) {
