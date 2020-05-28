@@ -31,11 +31,12 @@ public class UserDetailsImpl implements UserDetails {
     }
 
     public User getUser() {
-        if (usersService == null) {
-            usersService= SpringContext.getBean(UsersService.class);
-        }
-        if (user == null)
+        if (user == null) {
+            if (usersService == null) {
+                usersService = SpringContext.getBean(UsersService.class);
+            }
             user = usersService.getUser(id).get();
+        }
         return user;
     }
 

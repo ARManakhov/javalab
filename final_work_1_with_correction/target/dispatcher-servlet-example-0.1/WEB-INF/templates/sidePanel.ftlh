@@ -1,3 +1,4 @@
+<#import "/spring.ftl" as spring/>
 <td>
     <div>
         <a href="/">Home </a>
@@ -17,4 +18,10 @@
             <a href="/signUp">регистрация</a>
         </div>
     </#if>
+    <div>
+        <a href="?locale=ru">Русский </a>
+    </div>
+    <div>
+        <a href="?locale=us">English</a>
+    </div>
 </td>

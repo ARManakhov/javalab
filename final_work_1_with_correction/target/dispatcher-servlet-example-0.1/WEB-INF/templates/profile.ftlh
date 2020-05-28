@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" >
 <head>
     <meta charset="UTF-8">
     <title>Document</title>
@@ -9,6 +9,8 @@
     <tr>
         <#include "sidePanel.ftlh">
         <td>
+            <div>${.locale}</div>
+            <div><@spring.message "profile.name"/></div>
             <div>Имя : ${user.name}</div>
             <div>email : ${user.email}</div>
             <div>Зарегестрирован : ${user.createdAt}</div>

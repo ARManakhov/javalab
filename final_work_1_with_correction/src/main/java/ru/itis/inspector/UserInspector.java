@@ -15,7 +15,7 @@ import java.security.Principal;
 public class UserInspector implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        return false;
+        return true;
     }
 
     @Override
@@ -24,11 +24,11 @@ public class UserInspector implements HandlerInterceptor {
             Principal userPrincipal = request.getUserPrincipal();
             if (userPrincipal != null) {
                 
-                try {
+
                     User user = ((UserDetailsImpl) ((UsernamePasswordAuthenticationToken) userPrincipal).getPrincipal()).getUser();
 
-                    modelAndView.getModel().put("navUser", user);
-                }catch (Exception e){}
+                   // modelAndView.getModel().put("navUser", user);
+
             }
         }
     }

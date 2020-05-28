@@ -9,6 +9,7 @@ import ru.itis.models.User;
 import ru.itis.security.details.UserDetailsImpl;
 import ru.itis.services.UsersService;
 
+import java.util.Locale;
 import java.util.Optional;
 
 @Controller
@@ -35,10 +36,6 @@ public class UsersController {
 
     @RequestMapping(value = "/profile/{id}", method = RequestMethod.GET)
     public String getProfile(Model model, Authentication authentication, @PathVariable Long id) {
-        if (authentication != null) {
-            UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
-            model.addAttribute("navUser", userDetails.getUser());
-        }
         Optional<User> fullUserO = usersService.getUser(id);
         if (fullUserO.isPresent()) {
             User user = fullUserO.get();
