@@ -1,6 +1,10 @@
 package dev.sirosh.documentConstructor;
 
+import com.itextpdf.forms.PdfAcroForm;
+import com.itextpdf.forms.fields.PdfFormField;
 import com.itextpdf.kernel.pdf.*;
+import com.itextpdf.kernel.pdf.canvas.PdfCanvas;
+import com.itextpdf.layout.Canvas;
 import com.itextpdf.layout.element.List;
 import com.itextpdf.layout.element.Paragraph;
 import com.itextpdf.layout.Document;
@@ -15,6 +19,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
+import java.util.Map;
 
 public class FiringDocumentConstructor implements DocumentConstructor {
 
@@ -32,16 +37,18 @@ public class FiringDocumentConstructor implements DocumentConstructor {
         File src = new File (srcPath);
 
         PdfDocument pdfDoc = new PdfDocument(new PdfReader(src), new PdfWriter(file));
-        PdfPage page = pdfDoc.getFirstPage();
-        PdfDictionary dict = page.getPdfObject();
 
-        PdfObject object = dict.get(PdfName.Contents);
-        if (object instanceof PdfStream) {
-            PdfStream stream = (PdfStream) object;
-            byte[] data = stream.getBytes();
-            stream.setData(new String(data).replace("{name}", user.getFirstName() + user.getLastName()).getBytes(StandardCharsets.UTF_8));
-            stream.setData(new String(data).replace("{signature}", user.getFirstName() + user.getLastName()).getBytes(StandardCharsets.UTF_8));
-        }
+        PdfPage firstPage = pdfDoc.getFirstPage();
+
+        PdfResources resources = firstPage.getResources();
+
+        PdfCanvas pdfCanvas = new PdfCanvas(firstPage.newContentStreamAfter(), firstPage.getResources(), firstPage.getDocument());
+
+        Canvas canvas = new Canvas(pdfCanvas, pdfDoc, location.getRectangle());
+
+        canvas.add(new Paragraph("SECURED").setFontSize(8));
+
+        System.out.println(resources);
 
         pdfDoc.close();
 
