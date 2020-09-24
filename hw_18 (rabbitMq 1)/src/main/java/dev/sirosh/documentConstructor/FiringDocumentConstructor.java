@@ -9,6 +9,7 @@ import com.itextpdf.layout.element.List;
 import com.itextpdf.layout.element.Paragraph;
 import com.itextpdf.layout.Document;
 import dev.sirosh.model.User;
+import com.itextpdf.kernel.geom.Rectangle;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -38,17 +39,10 @@ public class FiringDocumentConstructor implements DocumentConstructor {
 
         PdfDocument pdfDoc = new PdfDocument(new PdfReader(src), new PdfWriter(file));
 
-        PdfPage firstPage = pdfDoc.getFirstPage();
+        Document document = new Document(pdfDoc);
 
-        PdfResources resources = firstPage.getResources();
-
-        PdfCanvas pdfCanvas = new PdfCanvas(firstPage.newContentStreamAfter(), firstPage.getResources(), firstPage.getDocument());
-
-        Canvas canvas = new Canvas(pdfCanvas, pdfDoc, location.getRectangle());
-
-        canvas.add(new Paragraph("SECURED").setFontSize(8));
-
-        System.out.println(resources);
+        document.add(new Paragraph(user.getLastName())
+                .setFontSize(8).setFixedPosition(10,10,10));
 
         pdfDoc.close();
 

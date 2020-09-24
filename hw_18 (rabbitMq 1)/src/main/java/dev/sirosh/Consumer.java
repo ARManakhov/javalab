@@ -56,6 +56,8 @@ public class Consumer {
         ObjectMapper objectMapper = new ObjectMapper();
 
         DocumentConstructor finalDocumentConstructor = documentConstructor;
+
+        System.out.println("waiting for data");
         DeliverCallback deliverCallback = (consumerTag, delivery) -> {
             try {
                 String message = new String(delivery.getBody(), "UTF-8");
