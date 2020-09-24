@@ -7,6 +7,7 @@ import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
 import com.rabbitmq.client.DeliverCallback;
+import dev.sirosh.documentConstructor.DeductionDocumentConstructor;
 import dev.sirosh.documentConstructor.DocumentConstructor;
 import dev.sirosh.documentConstructor.FiringDocumentConstructor;
 import dev.sirosh.documentConstructor.VacationDocumentConstructor;
@@ -33,7 +34,7 @@ public class Consumer {
                 break;
             case "2":
                 System.out.println("generating deduction doc");
-                documentConstructor = new FiringDocumentConstructor(new File("deduction_documents"));
+                documentConstructor = new DeductionDocumentConstructor(new File("deduction_documents"));
                 break;
             case "3":
                 System.out.println("generating vacation doc");
