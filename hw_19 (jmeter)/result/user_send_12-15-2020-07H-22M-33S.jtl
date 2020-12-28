@@ -1,0 +1,2 @@
+timeStamp,elapsed,label,responseCode,responseMessage,threadName,dataType,success,failureMessage,bytes,sentBytes,grpThreads,allThreads,URL,Latency,IdleTime,Connect
+0,0,AMQP Publisher,500,com.rabbitmq.client.PossibleAuthenticationFailureException: Possibly caused by authentication failure,Thread Group 1-1,,false,,0,0,1,1,null,0,0,0
