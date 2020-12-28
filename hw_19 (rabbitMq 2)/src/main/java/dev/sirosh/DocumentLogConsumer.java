@@ -9,8 +9,6 @@ import com.rabbitmq.client.DeliverCallback;
 import java.time.LocalDateTime;
 
 public class DocumentLogConsumer {
-    private static final String LOG_EXCHANGE_NAME = "logs";
-
     public static void main(String[] argv) throws Exception {
 
         ConnectionFactory factory = new ConnectionFactory();
@@ -18,9 +16,9 @@ public class DocumentLogConsumer {
         Connection producerConnection = factory.newConnection();
         Channel channel = producerConnection.createChannel();
 
-        channel.exchangeDeclare(LOG_EXCHANGE_NAME, "direct");
+        channel.exchangeDeclare(Exchange.LOG, "direct");
         String queueName = channel.queueDeclare().getQueue();
-        channel.queueBind(queueName, LOG_EXCHANGE_NAME, "");
+        channel.queueBind(queueName, Exchange.LOG, "");
 
         ObjectMapper objectMapper = new ObjectMapper();
 

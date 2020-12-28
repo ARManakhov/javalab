@@ -1,5 +1,6 @@
 package dev.sirosh.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 
 import java.text.DateFormat;
@@ -19,7 +20,10 @@ public class User {
     String passportNumber;
     String phone;
     String email;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/mm/yyyy")
     Date birthDay;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/mm/yyyy")
     Date dateOfIssue;
+    Boolean isEmployee;
 
 }

@@ -15,9 +15,8 @@ import dev.sirosh.model.User;
 
 import java.io.File;
 
-public class DocumentGeneratorConsumer {
+public class EmployeeDocumentGeneratorConsumer {
 
-    private static final String EXCHANGE_NAME = "user_info";
 
     public static void main(String[] argv) throws Exception {
         if (argv.length == 0){
@@ -50,9 +49,11 @@ public class DocumentGeneratorConsumer {
         Connection connection = factory.newConnection();
         Channel channel = connection.createChannel();
 
-        channel.exchangeDeclare(EXCHANGE_NAME, "fanout");
+        channel.exchangeDeclare(Exchange.DOCUMENT, "topic");
         String queueName = channel.queueDeclare().getQueue();
-        channel.queueBind(queueName, EXCHANGE_NAME, "");
+        channel.queueBind(queueName, Exchange.DOCUMENT, "employee");
+
+        channel.exchangeDeclare(Exchange.LOG, "direct");
 
         ObjectMapper objectMapper = new ObjectMapper();
 
@@ -63,7 +64,8 @@ public class DocumentGeneratorConsumer {
             try {
                 String message = new String(delivery.getBody(), "UTF-8");
                 User user = objectMapper.readValue(message, User.class);
-
+                String logMessage = "new document for " + user.getFirstName() + " made in " + finalDocumentConstructor.getClass();
+                channel.basicPublish(Exchange.LOG, "", null, logMessage.getBytes("UTF-8"));
                 finalDocumentConstructor.construct(user, user.getFirstName() + "_" + user.getPassportNumber() + ".pdf");
             }catch (Exception e ){
                 e.printStackTrace();

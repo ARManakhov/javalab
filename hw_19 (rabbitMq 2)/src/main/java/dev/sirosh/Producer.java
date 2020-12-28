@@ -15,11 +15,15 @@ import java.util.Date;
 import java.util.Scanner;
 import java.util.concurrent.TimeoutException;
 
+import static java.util.Objects.nonNull;
 
+/*
+* producer -> documentValidate -> costumerDocumentGenerate
+*                              -> employeeDocumentGenerate
+*          -> documentSave
+*
+* */
 public class Producer {
-
-    private static final String PRODUCER_EXCHANGE_NAME = "producer";
-    private static final String LOG_EXCHANGE_NAME = "logs";
 
 
     public static void main(String[] args) throws IOException, TimeoutException {
@@ -29,17 +33,22 @@ public class Producer {
         Connection connection = factory.newConnection();
         Channel channel = connection.createChannel();
 
-        channel.exchangeDeclare(PRODUCER_EXCHANGE_NAME, "fanout");
-        channel.exchangeDeclare(LOG_EXCHANGE_NAME, "direct");
+        channel.exchangeDeclare(Exchange.PRODUCER, "fanout");
+        channel.exchangeDeclare(Exchange.LOG, "direct");
 
         Scanner consoleScanner = new Scanner(System.in);
         DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
 
+        channel.exchangeDeclare(Exchange.LOG, "direct");
+
         ObjectMapper objectMapper = new ObjectMapper();
 
 
+        boolean isEmployee = nonNull(args) && args.length > 0 && args[0].equals("-employee");
+
         User.UserBuilder userBuilder = User.builder();
         for (; ; ) {
+            userBuilder.isEmployee(isEmployee);
             System.out.println("please enter first name");
             userBuilder = userBuilder.firstName(consoleScanner.nextLine());
             System.out.println("please enter last name");
@@ -76,8 +85,9 @@ public class Producer {
 
             User User = userBuilder.build();
             String userData = objectMapper.writeValueAsString(User);
-            channel.basicPublish(PRODUCER_EXCHANGE_NAME, "", null, userData.getBytes("UTF-8"));
-            channel.basicPublish(LOG_EXCHANGE_NAME, "", null, ("new user :" + userData).getBytes("UTF-8"));
+            System.out.println(userData);
+            channel.basicPublish(Exchange.PRODUCER, "", null, userData.getBytes("UTF-8"));
+            channel.basicPublish(Exchange.LOG, "", null, ("new user :" + userData).getBytes("UTF-8"));
 
             System.out.println("u'r data is send.");
         }
