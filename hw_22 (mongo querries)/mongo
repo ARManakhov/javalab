@@ -1,0 +1,40 @@
+use "poshloPoehalo";
+db.createCollection("user");
+db.user.insert([{
+    name:"Albert Manakhov",
+    mail:"ARManakhov@stud.kpfu.ru",
+    hashPassword:"hashedSuperSecretPassword",
+    role:"ADMIN",
+    state:"CONFIRMED",
+    createdAt: new Date()
+},{
+    name:"Marsel Sidikov",
+    mail:"SididkovMarsel@kpfu.ru",
+    hashPassword:"hashedSuperSecretPassword",
+    role:"USER",
+    state:"CONFIRMED",
+    createdAt: new Date()
+}])
+db.user.find();
+
+db.createCollection("city");
+db.city.insert([{
+    name:"Kazan",
+    cordX:12,
+    cordY:21,
+},{
+    name:"Moscow",
+    cordX:21,
+    cordY:12,
+}]);
+db.city.find();
+
+db.createCollection("movement");
+db.movement.insert([{
+    from:ObjectId("5feb30fcb9e8257f58fda238"),
+    to:ObjectId("5feb30fcb9e8257f58fda239"),
+    price:1000,
+    departureDate:new Date("2020-12-01T16:00:00Z"),
+    arrivalDate:new Date("2020-12-02T10:00:00Z")
+}]);
+db.movement.find(); 
