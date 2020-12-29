@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import java.util.Optional;
 
 @Controller
-public class ProfileController {
+public class UserProfileController {
     @Autowired
     UserService userService;
 

@@ -2,6 +2,7 @@ package dev.sirosh.poshlopoehalo.controller.api;
 
 import dev.sirosh.poshlopoehalo.dto.DtoMovement;
 import dev.sirosh.poshlopoehalo.dto.DtoMovementExt;
+import dev.sirosh.poshlopoehalo.dto.DtoMovementExtResponse;
 import dev.sirosh.poshlopoehalo.model.City;
 import dev.sirosh.poshlopoehalo.model.Movement;
 import dev.sirosh.poshlopoehalo.model.Transport;
@@ -10,6 +11,7 @@ import dev.sirosh.poshlopoehalo.service.MovementService;
 import dev.sirosh.poshlopoehalo.service.TransportService;
 import dev.sirosh.poshlopoehalo.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.EntityModel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -43,10 +45,16 @@ public class RestMovementController {
         Optional<Movement> movementOptional = movementService.get(id);
         Map<Object, Object> model = new HashMap<>();
         if (movementOptional.isPresent()) {
-            return ok(DtoMovementExt.toDto(movementOptional.get()));
+            return ok(EntityModel.of(
+                    DtoMovementExtResponse.builder()
+                            .dtoMovementExt(DtoMovementExt.toDto(movementOptional.get()))
+                            .status("ok")
+                            .build()));
         }
-        model.put("status","err");
-        return ok(model);
+        return ok(EntityModel.of(
+                DtoMovementExtResponse.builder()
+                .status("err")
+                .build()));
     }
 
     @PostMapping("/api/movement")
@@ -68,11 +76,16 @@ public class RestMovementController {
                     .expired(false)
                     .build();
             movementService.add(movement);
-            model.put("status","ok");
-            return ok(model);
+            return ok(EntityModel.of(
+                    DtoMovementExtResponse.builder()
+                            .dtoMovementExt(DtoMovementExt.toDto(movement))
+                            .status("ok")
+                            .build()));
         }
-        model.put("status","err");
-        return ok(model);
+        return ok(EntityModel.of(
+                DtoMovementExtResponse.builder()
+                        .status("err")
+                        .build()));
     }
 
 

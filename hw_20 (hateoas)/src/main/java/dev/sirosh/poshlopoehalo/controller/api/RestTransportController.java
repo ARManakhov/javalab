@@ -1,10 +1,12 @@
 package dev.sirosh.poshlopoehalo.controller.api;
 
 import dev.sirosh.poshlopoehalo.dto.DtoTransport;
+import dev.sirosh.poshlopoehalo.dto.DtoTransportResponse;
 import dev.sirosh.poshlopoehalo.model.Transport;
 import dev.sirosh.poshlopoehalo.service.TransportService;
 import dev.sirosh.poshlopoehalo.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.EntityModel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,18 +31,22 @@ public class RestTransportController {
     @GetMapping("/api/transport/{id}")
     ResponseEntity getTransport(@PathVariable Long id) {
         Optional<Transport> transport = transportService.get(id);
-        Map<Object, Object> model = new HashMap<>();
         if (transport.isPresent()) {
-            return ok(DtoTransport.toDto(transport.get()));
+            return ok(EntityModel.of(
+                    DtoTransportResponse.builder()
+                            .dtoTransport(DtoTransport.toDto(transport.get()))
+                            .status("ok")
+                            .build()));
         }
-        model.put("status", "err");
-        return ok(model);
+        return ok(EntityModel.of(
+                DtoTransportResponse.builder()
+                        .status("err")
+                        .build()));
     }
 
     @PostMapping("/api/transport")
     @PreAuthorize("hasRole('ADMIN')")
     ResponseEntity addTransport(DtoTransport dtoTransport) {
-        Map<Object, Object> model = new HashMap<>();
 
         Transport transport = Transport.builder()
                 .model(dtoTransport.getModel())
@@ -50,8 +56,11 @@ public class RestTransportController {
 
         transportService.add(transport);
 
-        model.put("status", "ok");
-        return ok(model);
+        return ok(EntityModel.of(
+                DtoTransportResponse.builder()
+                        .dtoTransport(DtoTransport.toDto(transport))
+                        .status("ok")
+                        .build()));
     }
 
 

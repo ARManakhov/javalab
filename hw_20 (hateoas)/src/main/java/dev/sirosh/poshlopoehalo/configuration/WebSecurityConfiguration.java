@@ -56,7 +56,6 @@ public class WebSecurityConfiguration {
                     .antMatchers("/", "/sign_up","/sign_in_mail", "/js/**", "/oauth2/**","/movement/**","/signInByMail","/validate/**","/stomp/**","/websocket/**").permitAll()
                     .antMatchers("/profile","/booking/**").authenticated()
                     .antMatchers("/admin", "/new_**","/swagger-ui.html").hasAuthority("ADMIN");
-            http.oauth2Login();
             http.csrf().disable();
             super.configure(http);
         }

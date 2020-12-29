@@ -1,5 +1,6 @@
 package dev.sirosh.poshlopoehalo.controller.api;
 
+import dev.sirosh.poshlopoehalo.dto.BookingResponseDto;
 import dev.sirosh.poshlopoehalo.model.Booking;
 import dev.sirosh.poshlopoehalo.model.Movement;
 import dev.sirosh.poshlopoehalo.model.User;
@@ -8,6 +9,7 @@ import dev.sirosh.poshlopoehalo.service.BookingService;
 import dev.sirosh.poshlopoehalo.service.MovementService;
 import dev.sirosh.poshlopoehalo.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.EntityModel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -37,34 +39,40 @@ public class RestBookingController {
     ResponseEntity addBooking(@PathVariable Long id, Authentication authentication) {
         User user = ((UserDetailsImpl) authentication.getPrincipal()).getUser();
         Optional<Movement> movementOptional = movementService.get(id);
-        Map<Object, Object> model = new HashMap<>();
         if (movementOptional.isPresent()) {
-            model.put("status","ok");
-            bookingService.addBooking(Booking.builder()
+            Booking booking = Booking.builder()
                     .user(user)
                     .movement(movementOptional.get())
-                    .build());
-            return ok(model);
+                    .build();
+            bookingService.addBooking(booking);
+            return ok(EntityModel.of(BookingResponseDto.builder()
+                    .booking(booking)
+                    .status("ok")
+                    .build()));
         }
-        model.put("status","err");
-        return ok(model);
+        return ok(EntityModel.of(BookingResponseDto.builder()
+                .status("err")
+                .build()));
     }
 
     @DeleteMapping("/api/booking/{id}")
     ResponseEntity deleteBooking(@PathVariable Long id, Authentication authentication) {
         User user = ((UserDetailsImpl) authentication.getPrincipal()).getUser();
         Optional<Movement> movementOptional = movementService.get(id);
-        Map<Object, Object> model = new HashMap<>();
         if (movementOptional.isPresent()) {
-            model.put("status","ok");
-            bookingService.deleteBooking(Booking.builder()
+            Booking booking = Booking.builder()
                     .user(user)
                     .movement(movementOptional.get())
-                    .build());
-            return ok(model);
+                    .build();
+            bookingService.deleteBooking(booking);
+            return ok(EntityModel.of(BookingResponseDto.builder()
+                    .booking(booking)
+                    .status("ok")
+                    .build()));
         }
-        model.put("status","err");
-        return ok(model);
+        return ok(EntityModel.of(BookingResponseDto.builder()
+                .status("err")
+                .build()));
     }
 
 

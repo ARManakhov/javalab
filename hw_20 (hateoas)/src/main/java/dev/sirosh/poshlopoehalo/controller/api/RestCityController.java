@@ -1,10 +1,12 @@
 package dev.sirosh.poshlopoehalo.controller.api;
 
 import dev.sirosh.poshlopoehalo.dto.DtoCity;
+import dev.sirosh.poshlopoehalo.dto.DtoCityResponse;
 import dev.sirosh.poshlopoehalo.model.City;
 import dev.sirosh.poshlopoehalo.service.CityService;
 import dev.sirosh.poshlopoehalo.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.EntityModel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,28 +31,31 @@ public class RestCityController {
     @GetMapping("/api/city/{id}")
     ResponseEntity getCity(@PathVariable Long id) {
         Optional<City> city = cityService.get(id);
-        Map<Object, Object> model = new HashMap<>();
         if (city.isPresent()) {
-            return ok(DtoCity.toDto(city.get()));
+            return ok(EntityModel.of(DtoCityResponse.builder()
+                    .status("ok")
+                    .dtoCity(DtoCity.toDto(city.get()))
+                    .build()));
         }
-        model.put("status","err");
-        return ok(model);
+        return ok(EntityModel.of(DtoCityResponse.builder()
+                .status("err")
+                .build()));
     }
 
     @GetMapping("/api/cityName/{name}")
     ResponseEntity getCity(@PathVariable String name) {
         City city = cityService.get(name);
         Map<Object, Object> model = new HashMap<>();
-            return ok(DtoCity.toDto(city));
-//        model.put("status","err");
-//        return ok(model);
+        return ok(EntityModel.of(DtoCityResponse.builder()
+                .status("ok")
+                .dtoCity(DtoCity.toDto(city))
+                .build()));
     }
 
 
     @PostMapping("/api/city")
     @PreAuthorize("hasRole('ADMIN')")
-
-    ResponseEntity addCity( DtoCity dtoCity) {
+    ResponseEntity addCity(DtoCity dtoCity) {
         Map<Object, Object> model = new HashMap<>();
 
         City city = City.builder()
@@ -59,12 +64,11 @@ public class RestCityController {
                 .cordY(dtoCity.getCordY())
                 .build();
         cityService.add(city);
-        model.put("status","ok");
-        return ok(model);
+        return ok(EntityModel.of(DtoCityResponse.builder()
+                .status("ok")
+                .dtoCity(DtoCity.toDto(city))
+                .build()));
     }
-
-
-
 
 
 }
