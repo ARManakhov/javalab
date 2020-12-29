@@ -1,4 +1,4 @@
-package dev.sirosh.poshlopoehalo;
+package dev.sirosh.poshlopoehalo.driver;
 
 import com.mongodb.client.*;
 import dev.sirosh.poshlopoehalo.model.Movement;

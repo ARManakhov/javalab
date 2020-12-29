@@ -1,6 +1,5 @@
-package dev.sirosh.poshlopoehalo.reposetory;
+package dev.sirosh.poshlopoehalo.repository;
 
-import dev.sirosh.poshlopoehalo.model.City;
 import dev.sirosh.poshlopoehalo.model.Movement;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;

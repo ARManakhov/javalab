@@ -1,12 +1,9 @@
-package dev.sirosh.poshlopoehalo;
+package dev.sirosh.poshlopoehalo.spring;
 
 
-import com.mongodb.client.MongoClients;
 import dev.sirosh.poshlopoehalo.model.Movement;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Query;
 

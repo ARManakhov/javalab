@@ -11,7 +11,7 @@ import java.util.List;
 @Builder
 public class City  {
     @Id
-    Long _id;
+    String _id;
     String name;
     Double cordX;
     Double cordY;

@@ -5,7 +5,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.sql.Timestamp;
+import java.util.Date;
 
 @Data
 @AllArgsConstructor
@@ -21,8 +21,8 @@ public class Movement {
     City from;
     @DBRef
     City to;
-    Timestamp departureDate;
-    Timestamp arrivalDate;
+    Date departureDate;
+    Date arrivalDate;
     Double price;
     Boolean expired;
 }

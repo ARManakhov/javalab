@@ -1,15 +1,17 @@
-package dev.sirosh.poshlopoehalo;
+package dev.sirosh.poshlopoehalo.repository;
 
 import dev.sirosh.poshlopoehalo.model.City;
 import dev.sirosh.poshlopoehalo.model.Movement;
 import dev.sirosh.poshlopoehalo.model.Transport;
-import dev.sirosh.poshlopoehalo.reposetory.CityRepository;
-import dev.sirosh.poshlopoehalo.reposetory.MovementRepository;
-import dev.sirosh.poshlopoehalo.reposetory.RepositoriesConfig;
+import dev.sirosh.poshlopoehalo.repository.CityRepository;
+import dev.sirosh.poshlopoehalo.repository.MovementRepository;
+import dev.sirosh.poshlopoehalo.repository.RepositoriesConfig;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
+import java.util.Date;
 import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 public class Repository {
@@ -35,8 +37,8 @@ public class Repository {
                 .from(saratovCity)
                 .to(samaraCity)
                 .price(1234D)
-                .arrivalDate(Timestamp.valueOf(LocalDateTime.now().minusHours(5)))
-                .arrivalDate(Timestamp.valueOf(LocalDateTime.now().plusHours(5)))
+                .arrivalDate(new Date())
+                .departureDate(new Date())
                 .transport(Transport.builder()
                         .model("жигуль")
                         .build())
