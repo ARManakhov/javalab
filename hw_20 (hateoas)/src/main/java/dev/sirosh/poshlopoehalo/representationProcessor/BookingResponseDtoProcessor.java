@@ -7,11 +7,13 @@ import dev.sirosh.poshlopoehalo.dto.AuthResponseDto;
 import dev.sirosh.poshlopoehalo.dto.BookingResponseDto;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.server.RepresentationModelProcessor;
+import org.springframework.stereotype.Component;
 
 import static java.util.Objects.nonNull;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
+@Component
 public class BookingResponseDtoProcessor implements RepresentationModelProcessor<EntityModel<BookingResponseDto>> {
     @Override
     public EntityModel<BookingResponseDto> process(EntityModel<BookingResponseDto> model) {

@@ -74,6 +74,4 @@ public class RestBookingController {
                 .status("err")
                 .build()));
     }
-
-
 }

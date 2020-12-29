@@ -7,11 +7,13 @@ import dev.sirosh.poshlopoehalo.dto.DtoMovementExt;
 import dev.sirosh.poshlopoehalo.dto.DtoMovementExtResponse;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.server.RepresentationModelProcessor;
+import org.springframework.stereotype.Component;
 
 import static java.util.Objects.nonNull;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
+@Component
 public class DtoMovementExtResponseProcessor implements RepresentationModelProcessor<EntityModel<DtoMovementExtResponse>> {
     @Override
     public EntityModel<DtoMovementExtResponse> process(EntityModel<DtoMovementExtResponse> model) {

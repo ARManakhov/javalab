@@ -16,9 +16,7 @@ import dev.sirosh.model.User;
 import java.io.File;
 
 public class Consumer {
-
     private static final String EXCHANGE_NAME = "user_info";
-
     public static void main(String[] argv) throws Exception {
         if (argv.length == 0){
             System.out.println("there is no arg, exiting");

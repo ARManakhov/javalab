@@ -18,9 +18,7 @@ import java.util.concurrent.TimeoutException;
 
 
 public class Producer {
-
     private static final String EXCHANGE_NAME = "user_info";
-
     public static void main(String[] args) throws IOException, TimeoutException {
         ConnectionFactory factory = new ConnectionFactory();
         factory.setHost("localhost");
